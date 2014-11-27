@@ -1,28 +1,20 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH << '.'
-
-require_relative 'Tenticle'
+require './Tenticle'
 
 # Start up (add check-for-command-line-flags eventually but not right now)
 
-A = Tenticle::Arm.initialize(ARGV) # Should catch the status of initialization for error decomposition
+a = Tenticle::Cups.new # Create one tenticle for the init stuff
 
-B = Tenticle::Arm.new() # This is going to throw our errors and suchness
+a.init(ARGV) # Should catch the status of initialization for error decomposition
 
-B.Arm.ize("Cupsize", "babycakes")
+b = Tenticle::Cups.new # This tenticle is going to throw our errors and suchness
 
-B.Arm.err("You wanted to know, baby.", 2)
-B.Arm.err("Just a jerk.", 1)
-B.Arm.err("Calumny and perfidy!", 0)
+b.err("You wanted to know, baby.", 2)
+b.err("Just a jerk.", 1)
+b.err("Calumny and perfidy!", 0)
 
-B.Arm.err("This doesn't happen.", 2)
-
-
-
-# This is where the Octypus primary logic goes
-# we'll write a helper module from the half-built version after we set up SVN for eclipse
-
+b.err("This doesn't happen.", 2)
 
 # Load a config file (ideally in YAML so I don't have to reconceptualize that)
 #
@@ -34,4 +26,4 @@ B.Arm.err("This doesn't happen.", 2)
 #
 # Shut down
 #
-#
+
