@@ -7,20 +7,29 @@ module Tenticle
 
   class Cups
 
+    @@file = 'default.yaml'
+    @@verbose = false
+    @@errorlevel = 2
+    @@times = 0
+
+#FIXME: this has a non termination error
+
     def init (args)
 
       max = 0
       list = Hash.new
-      args.each_with_index do |arg, count|
+      args.each_with_index { |arg, count|
         list[arg] = count+1
         max = count+1
-      end
+      }
 
       puts "Max: #{ max }"
 
       x = 0
 
       while (max > x) do
+
+      puts "We got this far, indeed."
 
       if (list[x] == ('-f')) then
         puts "Setting @@file to #{ list[x+1] }"
@@ -53,6 +62,8 @@ module Tenticle
     end
 
   end
+
+#TODO: this probably could be streamlined a lot
 
   def prefix (prefix, message)
     yield(prefix, message)

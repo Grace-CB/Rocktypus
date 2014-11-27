@@ -8,13 +8,14 @@ a = Tenticle::Cups.new # Create one tenticle for the init stuff
 
 a.init(ARGV) # Should catch the status of initialization for error decomposition
 
-b = Tenticle::Cups.new # This tenticle is going to throw our errors and suchness
+#b = Tenticle::Cups.new # This tenticle is going to throw our errors and suchness
 
-b.err("You wanted to know, baby.", 2)
-b.err("Just a jerk.", 1)
-b.err("Calumny and perfidy!", 0)
+#b.err("This is diagnostic level, for FYI messages.", 2)
+#b.err("Warning level, for things that aren't fatal.", 1)
+#b.err("Exception level! Perfidy!", 0)
+#b.err("This doesn't happen.", 5)
 
-b.err("This doesn't happen.", 2)
+#puts "We didn't quit, or else this wouldn't be here."
 
 # Load a config file (ideally in YAML so I don't have to reconceptualize that)
 #
