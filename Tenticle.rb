@@ -7,105 +7,98 @@ module Tenticle
 
   class Cups
 
-    @@file = 'default.yaml'
-    @@verbose = false
-    @@errorlevel = 2
-    @@times = 0
+      attr_accessor :file, :verbose, :errorlevel, :times, :list
 
 #FIXME: this has a non termination error
 
-    def init (args)
+    def initialize (args)
 
-      max = 0
-      list = Hash.new
-      args.each_with_index { |arg, count|
-        list[arg] = count+1
-        max = count+1
-      }
+      # These define the basic configuration. They're altered by command line options.
 
-      puts "Max: #{ max }"
+      file = 'default.yaml'
+      verbose = false
+      @errorlevel = 2
+      @times = 0
+      @list = []
 
-      x = 0
+      args.each_with_index do |arg, count|
 
-      while (max > x) do
+      @list[count] = arg
 
-      puts "We got this far, indeed."
+        if (arg == ('-f')) then
+          puts "Setting config filename as #{ list[count+1] }"
+          @file = list[count+1]
 
-      if (list[x] == ('-f')) then
-        puts "Setting @@file to #{ list[x+1] }"
-        @@file = list[x+1]
-        x = x + 2
-        next
+        elsif (list[count] == ('-v')) then
+          puts "Setting verbose to true"
+          verbose = true
 
-      elsif (list[x] == ('-v')) then
-        puts "Setting @@verbose to true"
-        @@verbose = true
+        elsif (list[count] == ('-e')) then
+          puts "Setting errorlevel to #{ list[count+1] }"
+          @errorlevel = list[count+1]
 
-      elsif (list[x] == ('-e')) then
-        puts "Setting @@errorlevel to #{ list[x+1] }"
-        @@errorlevel = list[x+1]
-        x = x + 2
-        next
+        elsif (list[count] == ('-t')) then
+          puts "Setting times to #{ list[count+1] }"
+          @times = list[count+1]
 
-      elsif (list[x] == ('-t')) then
-        puts "Setting @@times to #{ list[x+1] }"
-        @@times = list[x+1]
-        x = x + 2
-        next
+        else
+
+        end
+
+      end
+
+      puts "Max: #{ @max }"
+      puts @list.join(" ")
+
+
+
+    end
+
+
+#TODO: this probably could be streamlined a lot
+
+    def prefix (prefix, message)
+      yield(prefix, message)
+    end
+
+    def ize(desc, message)
+      desc = desc + ": "
+      prefix(desc, message) { |a, b| a + b }
+    end
+
+    def errorize (message)
+      ize("Error: ", message)
+    end
+
+    def warnize (message)
+      ize("Warning", message)
+    end
+
+    def diagnize (message)
+      ize("Diagnostics", message)
+    end
+
+    def err (message, level)
+
+      if (level == 0) then
+        puts errorize(message)
+        puts "  >>[Fatal error. Quitting.]<<  "
+        exit
+
+      elsif (level == 1) then
+        puts warnize(message)
+
+      elsif (level == 2) then
+        puts diagnize(message)
 
       else
 
-        next
+        puts "Somehow we fell off the thing. You got me, bub."
 
       end
 
     end
 
   end
-
-#TODO: this probably could be streamlined a lot
-
-  def prefix (prefix, message)
-    yield(prefix, message)
-  end
-
-
-  def ize(desc, message)
-    desc = desc + ": "
-    prefix(desc, message) { |a, b| a + b }
-  end
-
-  def errorize (message)
-    ize("Error: ", message)
-  end
-
-  def warnize (message)
-    ize("Warning", message)
-  end
-
-  def diagnize (message)
-    ize("Diagnostics", message)
-  end
-
-  def err (message, level)
-
-    if (level == 0) then
-      puts errorize(message)
-      puts "  >>[Fatal error. Quitting.]<<  "
-      exit
-
-    elsif (level == 1) then
-      puts warnize(message)
-
-    elsif (level == 2) then
-      puts diagnize(message)
-
-    else
-      quit
-    end
-
-  end
-
-end
 
 end

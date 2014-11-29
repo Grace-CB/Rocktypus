@@ -4,16 +4,17 @@ require './Tenticle'
 
 # Start up (add check-for-command-line-flags eventually but not right now)
 
-a = Tenticle::Cups.new # Create one tenticle for the init stuff
+a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
+                              # check for incoming command line options,
+                              # etc. etc.
 
-a.init(ARGV) # Should catch the status of initialization for error decomposition
+puts a.list
 
-#b = Tenticle::Cups.new # This tenticle is going to throw our errors and suchness
+a.err("This is diagnostic level, for FYI messages.", 2)
+a.err("Warning level, for things that aren't fatal.", 1)
+a.err("Exception level! Perfidy!", 0)
+a.err("This doesn't happen.", 5)
 
-#b.err("This is diagnostic level, for FYI messages.", 2)
-#b.err("Warning level, for things that aren't fatal.", 1)
-#b.err("Exception level! Perfidy!", 0)
-#b.err("This doesn't happen.", 5)
 
 #puts "We didn't quit, or else this wouldn't be here."
 
