@@ -15,11 +15,11 @@ module Tenticle
 
       # These define the basic configuration. They're altered by command line options.
 
-      file = 'default.yaml'
-      verbose = false
-      @errorlevel = 2
-      @times = 0
-      @list = []
+      file = 'default.yaml'             # #TODO: Create a self-creator if default.yaml doesn't exist
+      verbose = false                   # Keep it quiet
+      @errorlevel = 2                   # Fatals
+      @times = 2                        # By default, if you don't specify repetitions, there's just two.
+      @list = []                        # Holds all the incoming arguments for Octypus.
 
       args.each_with_index do |arg, count|
 
@@ -81,8 +81,7 @@ module Tenticle
     def err (message, level)
 
       if (level == 0) then
-        puts errorize(message)
-        puts "  >>[Fatal error. Quitting.]<<  "
+        puts "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
         exit
 
       elsif (level == 1) then
