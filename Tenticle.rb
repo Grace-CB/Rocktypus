@@ -19,27 +19,24 @@ module Tenticle
       verbose = false                   # Keep it quiet
       @errorlevel = 2                   # Fatals
       @times = 2                        # By default, if you don't specify repetitions, there's just two.
-      @list = []                        # Holds all the incoming arguments for Octypus.
 
       args.each_with_index do |arg, count|
 
-      @list[count] = arg
-
         if (arg == ('-f')) then
-          puts "Setting config filename as #{ list[count+1] }"
-          @file = list[count+1]
+          puts "Setting config filename as '#{ args[count+1] }'"
+          @file = args[count+1]
 
-        elsif (list[count] == ('-v')) then
+        elsif (arg == ('-v')) then
           puts "Setting verbose to true"
           verbose = true
 
-        elsif (list[count] == ('-e')) then
-          puts "Setting errorlevel to #{ list[count+1] }"
-          @errorlevel = list[count+1]
+        elsif (arg == ('-e')) then
+          puts "Setting errorlevel to #{ arg[count+1] }"
+          @errorlevel = arg[count+1]
 
-        elsif (list[count] == ('-t')) then
-          puts "Setting times to #{ list[count+1] }"
-          @times = list[count+1]
+        elsif (arg[count] == ('-t')) then
+          puts "Setting times to #{ arg[count+1] }"
+          @times = arg[count+1]
 
         else
 
@@ -47,10 +44,7 @@ module Tenticle
 
       end
 
-      puts "Max: #{ @max }"
-      puts @list.join(" ")
-
-
+      puts args.join(" ")
 
     end
 
