@@ -61,7 +61,7 @@ module Tenticle
     end
 
     def errorize (message)
-      ize("Error: ", message)
+      ize("Error", message)
     end
 
     def warnize (message)
