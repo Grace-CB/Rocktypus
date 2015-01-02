@@ -9,34 +9,34 @@ module Tenticle
 
       attr_accessor :file, :verbose, :errorlevel, :times, :list
 
-#FIXME: this has a non termination error
+#fixme: this has a non termination error
 
     def initialize (args)
 
       # These define the basic configuration. They're altered by command line options.
 
-      file = 'default.yaml'             # #TODO: Create a self-creator if default.yaml doesn't exist
-      verbose = false                   # Keep it quiet
+      @file = 'default.yaml'             # #TODO: Create a self-creator if default.yaml doesn't exist
+      @verbose = false                   # Keep it quiet
       @errorlevel = 2                   # Fatals
-      @times = 2                        # By default, if you don't specify repetitions, there's just two.
+      @times = 3                        # By default, if you don't specify repetitions, there's just three.
 
       args.each_with_index do |arg, count|
 
         if (arg == ('-f')) then
-          puts "Setting config filename as '#{ args[count+1] }'"
+          err("Setting config filename as '#{ args[count+1] }'", 2)
           @file = args[count+1]
 
         elsif (arg == ('-v')) then
-          puts "Setting verbose to true"
-          verbose = true
+          err("Setting verbose to true", 2)
+          @verbose = true
 
         elsif (arg == ('-e')) then
-          puts "Setting errorlevel to #{ arg[count+1] }"
-          @errorlevel = arg[count+1]
+          err("Setting errorlevel to #{ args[count+1] }", 2)
+          @errorlevel = args[count+1]
 
-        elsif (arg[count] == ('-t')) then
-          puts "Setting times to #{ arg[count+1] }"
-          @times = arg[count+1]
+        elsif (arg == ('-t')) then
+          err("Setting times to #{ args[count+1] }", 2)
+          @times = args[count+1]
 
         else
 
@@ -44,7 +44,7 @@ module Tenticle
 
       end
 
-      puts args.join(" ")
+      err("Command line arguments are: #{ args.join(" ") }", 2)
 
     end
 
