@@ -20,20 +20,23 @@ require "trollop"
 
       # These define the basic configuration. They're altered by command line options.
 
-      @tests = ['test1', 'test2', 'test3']
-      @servers = ['avanboxel', 'qa-eris']
-      @options = {}
+#      @tests = ['test1', 'test2', 'test3']
+#      @servers = ['avanboxel', 'qa-eris']
+#      @options = {}
 #      @file = ''
 #      @verbose = false                                                     # Keep it quiet
       @errorlevel = "2"                                                      # Fatals
 #      @times = 3                                                           # By default, if you don't specify repetitions, there's just three.
 
       @options = Trollop::options do
-        opt :verbose, "Verbose on."                                         # Verbosity
         opt :file, "Filename", :type => :string, :default => 'cfg.yml'      # Default config is 'cfg.yml'
-        opt :iterations, "Iterations", :default => 3                        # Default number of iterations is 3
-        opt :servers, "Servers", :type => :strings, :default => ['qa-eris']   # Defaults to qa-eris
-        opt :tests, "Tests", :type => :strings, :default => ['u937']          # Defaults to u937
+        opt :iterations, "Iterations", :type => :integer, :default => 3     # Default number of iterations is 3
+        opt :servers, "Servers", :type => :strings, :default => ['qa-eris'] # Defaults to qa-eris
+        opt :tests, "Tests", :type => :strings, :default => ['u937']        # Defaults to u937
+        opt :errorlevel, "Error level", :type => :integer, :default => 2    # Defaults to 2
+        opt :browser, "Browser", :type => :string, :default => 'firefox'    # No default
+        opt :browserversion, "Browser version", :short => "-r",             # No default
+          :type => :string, :default => ''
       end
 
       puts "Command line arguments are: #{ p @options }"

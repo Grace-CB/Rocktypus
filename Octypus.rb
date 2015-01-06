@@ -10,6 +10,10 @@ a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
                               # etc. etc.
 
 
+# This was our stringything in Perl Octypus:
+# q(/usr/local/bin/gless) . " " . qq($test $server GE_BROWSER='$brow' GE_PLATFORM='$plat' GE_BROWSER_VERSION='$ver');
+
+# qx( /usr/local/bin/gless #{test server} GE_BROWSER=#{browser} GE_PLATFORM='#{platform} GE_BROWSER_VERSION=#{version} )
 
 #File.open('database.yml', 'w') do |file|
 #  file.write(Psych.dump([b, c, d]))
@@ -19,7 +23,6 @@ a.err("This is diagnostic level, for FYI messages.", 2)
 a.err("Warning level, for things that aren't fatal.", 1)
 a.err("Exception level! Perfidy!", 0)
 #a.err("This doesn't happen.", 5)
-
 
 # Load a config file (ideally in YAML so I don't have to reconceptualize that)
 #
