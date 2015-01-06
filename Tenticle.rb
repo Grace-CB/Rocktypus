@@ -1,6 +1,8 @@
 module Tenticle
 
 require "highline/import"
+require "logger"
+require "trollop"
 
   # We need to check the args for:
   # Verbose mode.
@@ -105,11 +107,11 @@ require "highline/import"
 
       elsif (level == 1) then
 
-        if (@errorlevel >= 1) then puts warnize(message) end
+        if (@errorlevel >= "1") then puts warnize(message) end
 
       elsif (level == 2) then
 
-        if (@errorlevel >= 2) then puts diagnize(message) end
+        if (@errorlevel >= "2") then puts diagnize(message) end
 
       else
 
