@@ -4,17 +4,21 @@ require "highline/import"
 require "logger"
 require "trollop"
 
-  # We need to check the args for:
-  # Verbose mode.
-  # Error level. (This is complex, so we may need to use a strategy pattern for it)
-  # Config file selection.
+  # trollop options settable at command line include:
+  # (S)ervers to test on
+  # (T)ests to run
+  # (I)terations of each test
+  # (E)rrorlevel
+  # (V)erbose mode
+  # (B)rowser flavor
+  # b(R)owser version
 
   class Cups
 
     # Cups provides Tenticle with grip. In this case, that means setting configuration
     # state and handling command line alterations for it.
 
-    attr_accessor :file, :verbose, :errorlevel, :times, :list
+    attr_accessor :options
 
     def initialize (args)
 
@@ -25,7 +29,7 @@ require "trollop"
 #      @options = {}
 #      @file = ''
 #      @verbose = false                                                     # Keep it quiet
-      @errorlevel = "2"                                                      # Fatals
+      @errorlevel = 2                                                       # Fatals
 #      @times = 3                                                           # By default, if you don't specify repetitions, there's just three.
 
       @options = Trollop::options do
@@ -34,12 +38,21 @@ require "trollop"
         opt :servers, "Servers", :type => :strings, :default => ['qa-eris'] # Defaults to qa-eris
         opt :tests, "Tests", :type => :strings, :default => ['u937']        # Defaults to u937
         opt :errorlevel, "Error level", :type => :integer, :default => 2    # Defaults to 2
+        opt :platform, "OS", :type => :string, :default => 'Windows 8'       # Defaults to Win8
         opt :browser, "Browser", :type => :string, :default => 'firefox'    # No default
         opt :browserversion, "Browser version", :short => "-r",             # No default
-          :type => :string, :default => ''
+          :type => :string, :default => '33'
       end
 
       puts "Command line arguments are: #{ p @options }"
+      @errorlevel = @options[:errorlevel]
+
+      # The hierarchy here is going to be default file, then specified file,
+      # then command line options if specified. That way, we can run Octy with just
+      # the default options we want.
+      # TODO: add this information to the helpfile that trollop does.
+      #
+      # MAYBE: Consider highline for a later 'interactive specification' option, though?
 
     end
 
@@ -75,11 +88,11 @@ require "trollop"
 
       elsif (level == 1) then
 
-        if (@errorlevel >= "1") then puts warnize(message) end
+        if (@errorlevel >= 1) then puts warnize(message) end
 
       elsif (level == 2) then
 
-        if (@errorlevel >= "2") then puts diagnize(message) end
+        if (@errorlevel >= 2) then puts diagnize(message) end
 
       else
 
