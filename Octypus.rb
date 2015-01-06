@@ -3,8 +3,6 @@
 require './Tenticle'
 require 'yaml'
 
-# Start up (add check-for-command-line-flags eventually but not right now)
-
 a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
                               # check for incoming command line options,
                               # etc. etc.
@@ -25,25 +23,27 @@ a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
 browser = a.options[:browser]
 platform = a.options[:platform]
 version = a.options[:browserversion]
-latterhalf = "GE_BROWSER=#{browser} GE_PLATFORM=#{platform} GE_BROWSER_VERSION=#{version}"
+latterhalf = "GE_BROWSER=\"#{browser}\" GE_PLATFORM=\"#{platform}\" GE_BROWSER_VERSION=\"#{version}\""
+
 
 # TODO: Refactor this later, and we can make it flexible enough to call single iteration
 # versions of the function for single-element lists but looped versions for multi-element
-# lists. It'll reduce overhead, maybe. Benchmark?
+# lists. It'll reduce overhead, too, maybe. Benchmark trials should give proof.
+
+result = []
 
 a.options[:tests].each {
-
     |test|
-    a.options[:servers].each {
 
+    a.options[:servers].each {
       |server|
 
       puts "Here's where we start the run of test #{ test } on server #{ server }."
-      formerhalf = '/usr/local/bin/gless ' + test + " " + server + " "
+      formerhalf = '/usr/local/bin/gless ' + "\"#{test}\" \"#{server}\" "
       execstring = formerhalf + latterhalf
       # puts execstring
-      %x( #{execstring} )
-
+      result = %x( #{execstring} )
+      p result
 
 
 

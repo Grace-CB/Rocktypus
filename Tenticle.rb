@@ -38,7 +38,7 @@ require "trollop"
         opt :servers, "Servers", :type => :strings, :default => ['qa-eris'] # Defaults to qa-eris
         opt :tests, "Tests", :type => :strings, :default => ['u937']        # Defaults to u937
         opt :errorlevel, "Error level", :type => :integer, :default => 2    # Defaults to 2
-        opt :platform, "OS", :type => :string, :default => 'Windows 8'       # Defaults to Win8
+        opt :platform, "OS", :type => :string, :default => 'Windows 8'      # Defaults to Win8
         opt :browser, "Browser", :type => :string, :default => 'firefox'    # No default
         opt :browserversion, "Browser version", :short => "-r",             # No default
           :type => :string, :default => '33'
