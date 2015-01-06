@@ -22,56 +22,21 @@ require "trollop"
 
       @tests = ['test1', 'test2', 'test3']
       @servers = ['avanboxel', 'qa-eris']
-      @file = ''
-      @verbose = false                  # Keep it quiet
-      @errorlevel = 2                   # Fatals
-      @times = 3                        # By default, if you don't specify repetitions, there's just three.
+      @options = {}
+#      @file = ''
+#      @verbose = false                                                     # Keep it quiet
+      @errorlevel = "2"                                                      # Fatals
+#      @times = 3                                                           # By default, if you don't specify repetitions, there's just three.
 
-      args.each_with_index do |arg, count|
-
-        if (arg == ('-v')) then
-          err("Verbose on", 2)
-          @verbose = true
-
-# Fix this functionality later, so that tests and servers tested can be specified
-# on the command line.
-#
-#        elsif (arg == ('-s')) then
-#          err("Servers specified as '#{ (args[count+1]).join(', ') }", 2)
-#          @servers = args[count+1]
-#
-#        elsif (arg == ('-t')) then
-#          err("Tests specified as '#{ (args[count+1]).join(', ') } ", 2)
-#          @tests = args[count+1]
-
-        elsif (arg == ('-f')) then
-          err("Setting config filename as '#{ args[count+1] }'", 2)
-          @file = args[count+1]
-          next
-
-        elsif (arg == ('-e')) then
-          err("Setting errorlevel to #{ args[count+1] }", 2)
-          @errorlevel = args[count+1]
-          next
-
-        elsif (arg == ('-i')) then
-          err("Setting iterations (#{ @times }) to #{ args[count+1] }", 2)
-          @times = args[count+1]
-          next
-
-        elsif (count == args.length) then
-          err("Hit the last argument, so we're popping out.", 2)
-
-        else
-
-# Currently Tenticle fails silently for unidentified command flags. Fix it someday?
-#          err("Unidentified command line flags used.", 0)
-
-        end
-
+      @options = Trollop::options do
+        opt :verbose, "Verbose on."                                         # Verbosity
+        opt :file, "Filename", :type => :string, :default => 'cfg.yml'      # Default config is 'cfg.yml'
+        opt :iterations, "Iterations", :default => 3                        # Default number of iterations is 3
+        opt :servers, "Servers", :type => :strings, :default => ['qa-eris']   # Defaults to qa-eris
+        opt :tests, "Tests", :type => :strings, :default => ['u937']          # Defaults to u937
       end
 
-      err("Command line arguments are: #{ args.join(" ") }", 2)
+      puts "Command line arguments are: #{ p @options }"
 
     end
 
