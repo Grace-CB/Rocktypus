@@ -35,17 +35,21 @@ result = []
 a.options[:tests].each {
     |test|
 
+    a.err( "For each test, we are iterating.", 2 )
+
     a.options[:servers].each {
       |server|
 
-      puts "Here's where we start the run of test #{ test } on server #{ server }."
-      formerhalf = '/usr/local/bin/gless ' + "\"#{test}\" \"#{server}\" "
+      a.err( "For each server, we are iterating.", 2 )
+
+      a.err( "Here's where we start the run of test #{ test } on server #{ server }.", 2)
+      formerhalf = "/usr/local/bin/gless #{test} #{server} "
+      a.err( "We'll use the execution string #{ formerhalf + latterhalf }", 2)
       execstring = formerhalf + latterhalf
       # puts execstring
-      result = %x( #{execstring} )
+      result = %x( #{formerhalf} )
+      a.err( "Finished execution, outputting result.", 2 )
       p result
-
-
 
     }
 
