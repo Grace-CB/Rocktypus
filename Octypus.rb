@@ -46,10 +46,13 @@ a.options[:tests].each {
       formerhalf = "/usr/local/bin/gless #{test} #{server} "
       a.err( "We'll use the execution string #{ formerhalf + latterhalf }", 2)
       execstring = formerhalf + latterhalf
-      # puts execstring
-      result = %x( #{formerhalf} )
+      a.err( "This is our string post-concatenation: #{ execstring }", 2)
+      tstamp = Time.new
+      result = %x( #{execstring} 2>&1 )
       a.err( "Finished execution, outputting result.", 2 )
-      p result
+      result.gsub(/\^\[\[[\d]{1,2}m/, "")
+      File.write( "./raw/Output #{ tstamp.to_a.join("-")}", result)
+      
 
     }
 

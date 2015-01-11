@@ -1,0 +1,116 @@
+
+
+
+Your current directory doesn't look right; putting you in /var/local/deploy/gless ; if that's not what you wanted, you want to clone qa-automation, and be in the gless dir.
+
+
+
+  3 2015.01.08-18:58:24 1420772304 /var/local/deploy/gless/features/support/server_data.rb:7: warning: already initialized constant CytobankUtil::ServerData::DefaultRolesFilepath
+  0 2015.01.08-18:58:24 1420772304 /var/local/deploy/gless/features/support/server_data.rb:7: warning: previous definition of DefaultRolesFilepath was here
+  0 2015.01.08-18:58:24 1420772304 [36m@experiments[0m
+  0 2015.01.08-18:58:24 1420772304 Feature: Cytobank Experiments
+  0 2015.01.08-18:58:24 1420772304
+  0 2015.01.08-18:58:24 1420772304   [36m@u937[0m
+  0 2015.01.08-18:58:24 1420772304   Scenario: Run The u937 Experiment[90m                                              # features/cytobank/experiment.feature:5[0m
+  8 2015.01.08-18:58:32 1420772312     [32mGiven I have configuration data for the requested server[90m                     # features/support/step_definitions/cytobank_steps.rb:3[0m[0m
+  0 2015.01.08-18:58:32 1420772312     [32mAnd I have the experiment data for '[32m[1mu937[0m[0m[32m'[90m                                    # features/support/step_definitions/experiment_steps/login.rb:1[0m[0m
+  6 2015.01.08-18:58:38 1420772318     [32mAnd I start the test framework[90m                                               # features/support/step_definitions/cytobank_steps.rb:8[0m[0m
+  3 2015.01.08-18:58:41 1420772321     [32mWhen I select my login server[90m                                                # features/support/step_definitions/cytobank_steps.rb:26[0m[0m
+ 20 2015.01.08-18:59:01 1420772341     [32mAnd I log in[90m                                                                 # features/support/step_definitions/cytobank_steps.rb:30[0m[0m
+  0 2015.01.08-18:59:01 1420772341     [32mThen I am on the experiments page[90m                                            # features/support/step_definitions/experiment_steps/login.rb:45[0m[0m
+ 38 2015.01.08-18:59:39 1420772379     [32mGiven I have enough credits[90m                                                  # features/support/step_definitions/experiment_steps/check_credits.rb:1[0m[0m
+ 32 2015.01.08-19:00:11 1420772411     [32mAnd I open the experiment[90m                                                    # features/support/step_definitions/experiment_steps/open_experiment.rb:1[0m[0m
+  2 2015.01.08-19:00:13 1420772413     [32mWhen I clone the experiment[90m                                                  # features/support/step_definitions/experiment_steps/open_experiment.rb:9[0m[0m
+  8 2015.01.08-19:00:21 1420772421     [32mThen I am certain that the experiment got cloned[90m                             # features/support/step_definitions/experiment_steps/open_experiment.rb:13[0m[0m
+ 10 2015.01.08-19:00:31 1420772431     [32mGiven I open the edit experiment form[90m                                        # features/support/step_definitions/experiment_steps/open_experiment.rb:38[0m[0m
+ 15 2015.01.08-19:00:46 1420772446     [32mWhen I change the experiment name to start with "[32m[1mu937[0m[0m[32m"[90m                       # features/support/step_definitions/experiment_steps/open_experiment.rb:42[0m[0m
+ 24 2015.01.08-19:01:10 1420772470     [32mThen The experiment name begins with "[32m[1mu937[0m[0m[32m"[90m                                  # features/support/step_definitions/experiment_steps/open_experiment.rb:47[0m[0m
+ 92 2015.01.08-19:02:42 1420772562     [32mGiven I go to the working illustration[90m                                       # features/support/step_definitions/experiment_steps.rb:3[0m[0m
+  1 2015.01.08-19:02:43 1420772563     [32mWhen I open the plot statistics pane[90m                                         # features/support/step_definitions/experiment_steps/annotate_channels.rb:1[0m[0m
+ 23 2015.01.08-19:03:06 1420772586     [32mAnd I open the file categorization page[90m                                      # features/support/step_definitions/experiment_steps/annotate_channels.rb:5[0m[0m
+ 11 2015.01.08-19:03:17 1420772597     [32mThen I should have the right FCS file names[90m                                  # features/support/step_definitions/experiment_steps/annotate_channels.rb:9[0m[0m
+ 15 2015.01.08-19:03:32 1420772612     [32mAnd I should have the right panel assignments[90m                                # features/support/step_definitions/experiment_steps/annotate_channels.rb:28[0m[0m
+111 2015.01.08-19:05:23 1420772723     [32mGiven I go to the working illustration[90m                                       # features/support/step_definitions/experiment_steps.rb:3[0m[0m
+  4 2015.01.08-19:05:27 1420772727     [32mAnd I [32m[1menable[0m[0m[32m the conditions dimension[90m                                        # features/support/step_definitions/experiment_steps/annotate_conditions.rb:1[0m[0m
+ 14 2015.01.08-19:05:41 1420772741     [32mAnd I go to the conditions setup page[90m                                        # features/support/step_definitions/experiment_steps/annotate_conditions.rb:8[0m[0m
+ 10 2015.01.08-19:05:51 1420772751     [32mWhen I add the conditions[90m                                                    # features/support/step_definitions/experiment_steps/annotate_conditions.rb:12[0m[0m
+  4 2015.01.08-19:05:55 1420772755     [32mThen I am sure that [32m[1mthe[0m[0m[32m list of conditions is correct[90m                        # features/support/step_definitions/experiment_steps/annotate_conditions.rb:19[0m[0m
+  1 2015.01.08-19:05:56 1420772756     [32mGiven I select the '[32m[1mAll Conditions[0m[0m[32m' tab[90m                                      # features/support/step_definitions/experiment_steps/annotate_conditions.rb:30[0m[0m
+ 11 2015.01.08-19:06:07 1420772767     [32mWhen I rename the condition '[32m[1mIFNg[0m[0m[32m' to '[32m[1mIFN-g[0m[0m[32m'[90m                                # features/support/step_definitions/experiment_steps/annotate_conditions.rb:24[0m[0m
+  3 2015.01.08-19:06:10 1420772770     [32mThen I am sure that [32m[1meach[0m[0m[32m list of conditions is correct[90m                       # features/support/step_definitions/experiment_steps/annotate_conditions.rb:19[0m[0m
+ 24 2015.01.08-19:06:34 1420772794     [32mAnd I am sure that the files are [32m[1minitially[0m[0m[32m assigned correctly[90m                # features/support/step_definitions/experiment_steps/annotate_conditions.rb:34[0m[0m
+  1 2015.01.08-19:06:35 1420772795     [32mGiven I select the '[32m[1mAll Conditions[0m[0m[32m' tab[90m                                      # features/support/step_definitions/experiment_steps/annotate_conditions.rb:30[0m[0m
+ 18 2015.01.08-19:06:53 1420772813     [32mWhen I move file '[32m[1m2-5) U937 IL-4 + IFN-g[0m[0m[32m' to condition '[32m[1mIL-4 + IFNg[0m[0m[32m'[90m         # features/support/step_definitions/experiment_steps/annotate_conditions.rb:45[0m[0m
+ 18 2015.01.08-19:07:11 1420772831     [32mAnd I move file '[32m[1m2-4) U937 IFN-g[0m[0m[32m' to condition '[32m[1mIFN-g[0m[0m[32m'[90m                       # features/support/step_definitions/experiment_steps/annotate_conditions.rb:45[0m[0m
+  3 2015.01.08-19:07:14 1420772834     [32mThen I am sure that [32m[1meach[0m[0m[32m list of conditions is correct[90m                       # features/support/step_definitions/experiment_steps/annotate_conditions.rb:19[0m[0m
+ 24 2015.01.08-19:07:38 1420772858     [31mAnd I am sure that the files are [31m[1mposteriorly[0m[0m[31m assigned correctly[90m              # features/support/step_definitions/experiment_steps/annotate_conditions.rb:34[0m[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      expected: {"unstim"=>[{:filename=>"20071001-u937.001", :sample_name=>"1-2) U937 Unstim"}, {:filename=>"20071001-u937.008", :sample_name=>"2-2) U937 Unstim"}], "IL-4"=>[{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}], "IFN-g"=>[{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}, {:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}], "IL-4 + IFNg"=>[{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}], "G-CSF"=>[{:filename=>"20071001-u937.005", :sample_name=>"1-7) U937 G-CSF"}, {:filename=>"20071001-u937.012", :sample_name=>"2-6) U937 G-CSF"}], "IFN Type I"=>[{:filename=>"20071001-u937.006", :sample_name=>"1-8) U937 IFN Type I"}, {:filename=>"20071001-u937.013", :sample_name=>"2-7) U937 IFN Type I"}], "IL-6"=>[{:filename=>"20071001-u937.007", :sample_name=>"1-9) U937 IL-6"}, {:filename=>"20071001-u937.014", :sample_name=>"2-8) U937 IL-6"}], "Unassigned"=>[{:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}]}[0m
+  0 2015.01.08-19:07:38 1420772858 [31m           got: {"unstim"=>[{:filename=>"20071001-u937.001", :sample_name=>"1-2) U937 Unstim"}, {:filename=>"20071001-u937.008", :sample_name=>"2-2) U937 Unstim"}], "IL-4"=>[{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}], "IFN-g"=>[{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}], "IL-4 + IFNg"=>[{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}], "G-CSF"=>[{:filename=>"20071001-u937.005", :sample_name=>"1-7) U937 G-CSF"}, {:filename=>"20071001-u937.012", :sample_name=>"2-6) U937 G-CSF"}], "IFN Type I"=>[{:filename=>"20071001-u937.006", :sample_name=>"1-8) U937 IFN Type I"}, {:filename=>"20071001-u937.013", :sample_name=>"2-7) U937 IFN Type I"}], "IL-6"=>[{:filename=>"20071001-u937.007", :sample_name=>"1-9) U937 IL-6"}, {:filename=>"20071001-u937.014", :sample_name=>"2-8) U937 IL-6"}], "Unassigned"=>[{:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}, {:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}]} (using ==)[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      Diff:[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      [0m
+  0 2015.01.08-19:07:38 1420772858 [31m      @@ -1,9 +1,9 @@[0m
+  0 2015.01.08-19:07:38 1420772858 [31m       "G-CSF" => [{:filename=>"20071001-u937.005", :sample_name=>"1-7) U937 G-CSF"}, {:filename=>"20071001-u937.012", :sample_name=>"2-6) U937 G-CSF"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m       "IFN Type I" => [{:filename=>"20071001-u937.006", :sample_name=>"1-8) U937 IFN Type I"}, {:filename=>"20071001-u937.013", :sample_name=>"2-7) U937 IFN Type I"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      -"IFN-g" => [{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}, {:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      -"IL-4" => [{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      -"IL-4 + IFNg" => [{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      +"IFN-g" => [{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      +"IL-4" => [{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      +"IL-4 + IFNg" => [{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m       "IL-6" => [{:filename=>"20071001-u937.007", :sample_name=>"1-9) U937 IL-6"}, {:filename=>"20071001-u937.014", :sample_name=>"2-8) U937 IL-6"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      -"Unassigned" => [{:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      +"Unassigned" => [{:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}, {:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m       "unstim" => [{:filename=>"20071001-u937.001", :sample_name=>"1-2) U937 Unstim"}, {:filename=>"20071001-u937.008", :sample_name=>"2-2) U937 Unstim"}],[0m
+  0 2015.01.08-19:07:38 1420772858 [31m       (RSpec::Expectations::ExpectationNotMetError)[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      ./features/support/step_definitions/experiment_steps/annotate_conditions.rb:42:in `/^I am sure that the files are (initially|posteriorly) assigned correctly$/'[0m
+  0 2015.01.08-19:07:38 1420772858 [31m      features/cytobank/experiment.feature:47:in `And I am sure that the files are posteriorly assigned correctly'[0m
+  0 2015.01.08-19:07:38 1420772858     [36mGiven I go to the working illustration[90m                                       # features/support/step_definitions/experiment_steps.rb:3[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mWhen I move the dimension '[36m[1mConditions[0m[0m[36m' after '[36m[1mChannels[0m[0m[36m'[90m                      # features/support/step_definitions/experiment_steps/experiment_config.rb:1[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I save the working illustration[90m                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mThen I am sure that the selection of '[36m[1mChannels[0m[0m[36m' is [36m[1minitially[0m[0m[36m correct[90m         # features/support/step_definitions/experiment_steps/experiment_config.rb:32[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure that the selection of '[36m[1mConditions[0m[0m[36m' is [36m[1minitially[0m[0m[36m correct[90m        # features/support/step_definitions/experiment_steps/experiment_config.rb:32[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure that the selection of '[36m[1mPopulations[0m[0m[36m' is [36m[1minitially[0m[0m[36m correct[90m       # features/support/step_definitions/experiment_steps/experiment_config.rb:32[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mGiven I go to the working illustration[90m                                       # features/support/step_definitions/experiment_steps.rb:3[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mWhen I update the selection of '[36m[1mChannels[0m[0m[36m'[90m                                    # features/support/step_definitions/experiment_steps/experiment_config.rb:11[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I update the selection of '[36m[1mConditions[0m[0m[36m'[90m                                   # features/support/step_definitions/experiment_steps/experiment_config.rb:11[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I update the selection of '[36m[1mPopulations[0m[0m[36m'[90m                                  # features/support/step_definitions/experiment_steps/experiment_config.rb:11[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I save the working illustration[90m                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mThen I am sure that the selection of '[36m[1mChannels[0m[0m[36m' is [36m[1mposteriorly[0m[0m[36m correct[90m       # features/support/step_definitions/experiment_steps/experiment_config.rb:32[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure that the selection of '[36m[1mConditions[0m[0m[36m' is [36m[1mposteriorly[0m[0m[36m correct[90m      # features/support/step_definitions/experiment_steps/experiment_config.rb:32[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure that the selection of '[36m[1mPopulations[0m[0m[36m' is [36m[1mposteriorly[0m[0m[36m correct[90m     # features/support/step_definitions/experiment_steps/experiment_config.rb:32[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mGiven I select Layout Placeholders[90m                                           # features/support/step_definitions/experiment_steps/experiment_config.rb:49[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mWhen I move column '[36m[1mp-Stat3-Ax488 - Panel 2[0m[0m[36m' after '[36m[1mp-Stat1-Ax647 - Panel 1[0m[0m[36m'[90m # features/support/step_definitions/experiment_steps/experiment_config.rb:53[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I move row '[36m[1mIL-4 + IFNg[0m[0m[36m' below '[36m[1mIL-4[0m[0m[36m'[90m                                    # features/support/step_definitions/experiment_steps/experiment_config.rb:67[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I save the working illustration[90m                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mGiven I select Layout Placeholders[90m                                           # features/support/step_definitions/experiment_steps/experiment_config.rb:49[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mThen I am sure that the columns are correct[90m                                  # features/support/step_definitions/experiment_steps/experiment_config.rb:81[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure that the rows are correct[90m                                      # features/support/step_definitions/experiment_steps/experiment_config.rb:92[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mGiven I go to the working illustration[90m                                       # features/support/step_definitions/experiment_steps.rb:3[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mWhen I update the plot controls for the [36m[1mcontour plots[0m[0m[36m[90m                        # features/support/step_definitions/experiment_steps/plots.rb:1[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I open Plot Statistics[90m                                                   # features/support/step_definitions/experiment_steps/plots.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I update the plot statistics for the [36m[1mcontour plots[0m[0m[36m[90m                       # features/support/step_definitions/experiment_steps/plots.rb:9[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I save the working illustration[90m                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mThen I save the illustration as '[36m[1mcontour plots[0m[0m[36m'[90m                              # features/support/step_definitions/experiment_steps/plots.rb:30[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure the printed plots are correct for the [36m[1mcontour plots[0m[0m[36m[90m            # features/support/step_definitions/experiment_steps/plots.rb:13[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mGiven I go to the working illustration[90m                                       # features/support/step_definitions/experiment_steps.rb:3[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mWhen I update the plot controls for the [36m[1mheatmaps[0m[0m[36m[90m                             # features/support/step_definitions/experiment_steps/plots.rb:1[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I open Plot Statistics[90m                                                   # features/support/step_definitions/experiment_steps/plots.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I update the plot statistics for the [36m[1mheatmaps[0m[0m[36m[90m                            # features/support/step_definitions/experiment_steps/plots.rb:9[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I save the working illustration[90m                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mThen I save the illustration as '[36m[1mheatmaps[0m[0m[36m'[90m                                   # features/support/step_definitions/experiment_steps/plots.rb:30[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure the printed plots are correct for the [36m[1mheatmaps[0m[0m[36m[90m                 # features/support/step_definitions/experiment_steps/plots.rb:13[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mGiven I go to the working illustration[90m                                       # features/support/step_definitions/experiment_steps.rb:3[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mWhen I update the plot controls for the [36m[1mhistogram overlays[0m[0m[36m[90m                   # features/support/step_definitions/experiment_steps/plots.rb:1[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I open Plot Statistics[90m                                                   # features/support/step_definitions/experiment_steps/plots.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I update the plot statistics for the [36m[1mhistogram overlays[0m[0m[36m[90m                  # features/support/step_definitions/experiment_steps/plots.rb:9[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I save the working illustration[90m                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mThen I save the illustration as '[36m[1mhistogram overlays[0m[0m[36m'[90m                         # features/support/step_definitions/experiment_steps/plots.rb:30[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mAnd I am sure the printed plots are correct for the [36m[1mhistogram overlays[0m[0m[36m[90m       # features/support/step_definitions/experiment_steps/plots.rb:13[0m[0m
+  0 2015.01.08-19:07:38 1420772858     [36mThen I sign out[90m                                                              # features/support/step_definitions/experiment_steps/logout.rb:1[0m[0m
+  1 2015.01.08-19:07:39 1420772859
+  0 2015.01.08-19:07:39 1420772859 [31mFailing Scenarios:[0m
+  0 2015.01.08-19:07:39 1420772859 [31mcucumber features/cytobank/experiment.feature:5[0m[90m # Scenario: Run The u937 Experiment[0m
+  0 2015.01.08-19:07:39 1420772859
+  0 2015.01.08-19:07:39 1420772859 1 scenario ([31m1 failed[0m)
+  0 2015.01.08-19:07:39 1420772859 75 steps ([31m1 failed[0m, [36m43 skipped[0m, [32m31 passed[0m)
+  0 2015.01.08-19:07:39 1420772859 9m14.243s
