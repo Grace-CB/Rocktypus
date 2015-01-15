@@ -23,7 +23,12 @@ a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
 browser = a.options[:browser]
 platform = a.options[:platform]
 version = a.options[:browserversion]
-latterhalf = "GE_BROWSER=\"#{browser}\" GE_PLATFORM=\"#{platform}\" GE_BROWSER_VERSION=\"#{version}\""
+
+fbrowser = "GE_BROWSER=\"#{browser}\""
+fplatform = "GE_PLATFORM=\"#{platform}\""
+fversion = "GE_BROWSER_VERSION=\"#{version}\""
+
+latterhalf = [fbrowser, fplatform, fversion].join( " " )
 
 
 # TODO: Refactor this later, and we can make it flexible enough to call single iteration
@@ -48,9 +53,11 @@ a.options[:tests].each {
       execstring = formerhalf + latterhalf
       a.err( "This is our string post-concatenation: #{ execstring }", 2)
       tstamp = Time.new
+#      result = "result"
       result = %x( #{execstring} 2>&1 )
       a.err( "Finished execution, outputting result.", 2 )
-      result.gsub(/\^\[\[[\d]{1,2}m/, "")
+      result = result.gsub(/\e\[\d{1,2}m/, '')
+      p result
       File.write( "./raw/Output #{ tstamp.to_a.join("-")}", result)
       
 
