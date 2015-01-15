@@ -2,6 +2,7 @@
 
 require './Tenticle'
 require 'yaml'
+require 'command_line_reporter'
 
 a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
                               # check for incoming command line options,
@@ -57,7 +58,6 @@ a.options[:tests].each {
       result = %x( #{execstring} 2>&1 )
       a.err( "Finished execution, outputting result.", 2 )
       result = result.gsub(/\e\[\d{1,2}m/, '')
-      p result
       File.write( "./raw/Output #{ tstamp.to_a.join("-")}", result)
       
 
@@ -65,11 +65,42 @@ a.options[:tests].each {
 
   }
 
+# Next up, we filter out errything that passes and report-format everything that doesn't. We've still got it in result.
 
-# Load a config file (ideally in YAML so I don't have to reconceptualize that)
-#
-# Execute the given test the number of times indicated on the servers given
-#
+processed = []
+
+class Cuisinart {
+
+  include CommandLineReporter
+
+  def initialize
+    self.formatter = 'progress'
+  end
+
+  def run
+    report.do
+    length = result.length 
+    count = 0
+    
+    result.each_with_index
+      |line, index|
+
+      if (index <= 7) 
+	next
+      else
+        processed = processed + line 
+      end
+
+    end
+
+  end
+
+}
+
+# The 'many if many one if one' thing is probably going to be a PITA to implement for a very small run cost.
+# Leave it off for later, if there are issues with resource hogging on highly asymmetrical runs (i.e., one
+# value for one or two things, several for all the rest)
+
 # Take the raw output of the tests and filter out non-error lines/info
 #
 # Produce reformatted reports
