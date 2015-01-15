@@ -78,19 +78,19 @@ class Cuisinart {
 
   def run
     report.do
-    length = result.length 
+    length = result.length
     count = 0
-    
-    result.each_with_index
+
+    result.each_with_index {
       |line, index|
 
-      if (index <= 7) 
-	next
+      if (index <= 7) then
+	     next
       else
-        processed = processed + line 
+        processed = processed + line
       end
 
-    end
+    }
 
   end
 
