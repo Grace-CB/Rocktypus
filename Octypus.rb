@@ -41,7 +41,7 @@ a.options[:tests].each {
       puts "Here's where we start the run of test #{ test } on server #{ server }."
       formerhalf = '/usr/local/bin/gless ' + test + " " + server + " "
       execstring = formerhalf + latterhalf
-      # puts execstring
+      puts execstring
       %x( #{execstring} )
 
 
