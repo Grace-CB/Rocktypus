@@ -31,10 +31,14 @@ fversion = "GE_BROWSER_VERSION=\"#{version}\""
 
 latterhalf = [fbrowser, fplatform, fversion].join( " " )
 
-
-# TODO: Refactor this later, and we can make it flexible enough to call single iteration
+# Refactor this later, and we can make it flexible enough to call single iteration
 # versions of the function for single-element lists but looped versions for multi-element
 # lists. It'll reduce overhead, too, maybe. Benchmark trials should give proof.
+
+# TODO: Refactor our test execution into a method so that we can handle multiples of any aspect of the execution
+# TODO: Make sure that method still keeps track of the data so that it knows when it's got a 'complete' gless command
+# TODO: Fix the diagnostics to accurately reflect what's being detected in the Cuisinart, because we don't have a 'lie' errorlevel
+# TODO: Massage reporting for readability
 
 result = []
 
