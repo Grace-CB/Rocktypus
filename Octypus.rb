@@ -53,12 +53,13 @@ a.options[:tests].each {
       a.err( "We'll use the execution string #{ formerhalf + latterhalf }", 2)
       execstring = formerhalf + latterhalf
       a.err( "This is our string post-concatenation: #{ execstring }", 2)
-      tstamp = Time.new
-#      result = "result"
-      result = %x( #{execstring} 2>&1 )
+      t = Time.new
+      time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("-") ].join(" ")
+      result = File.read( './raw/Output 12-3-14-19-1-2015-1-19-false-PST' )
+#      result = %x( #{execstring} 2>&1 )
       a.err( "Finished execution, outputting result.", 2 )
-      result = result.gsub(/\e\[\d{1,2}m/, '')
-      File.write( "./raw/Output #{ tstamp.to_a.join("-")}", result)
+#      result = result.gsub(/\e\[\d{1,2}m/, '')
+#      File.write( "./raw/Output #{ tstamp.to_a.join("-")}", result)
 
     }
 
@@ -66,35 +67,79 @@ a.options[:tests].each {
 
 # Next up, we filter out errything that passes and report-format everything that doesn't. We've still got it in result.
 
-processed = []
-
-class Cuisinart {
+class Cuisinart 
 
   include CommandLineReporter
 
-  def initialize
+  @a = ''
+
+  def initialize(a)
     self.formatter = 'progress'
+    @a = a
   end
 
-  def run
-    report.do
+  def run(result)
+    processed = []
+#    report.do
     length = result.length
-    count = 0
+    index = 0
 
-    result.each_with_index {
-      |line, index|
+    previous = ''
+    error = FALSE
 
-      if (index <= 7) then
-	     next
-      else
-        processed = processed + line
+    result.each_line { |line|
+
+      line = line.gsub(/^.{,35}/, '')					# Strip timestamp and epoch and blank space after
+      index = index + 1
+
+      if (index <= 9)
+	next
+      elsif (line.match(/^\W{4}\w/))					# Ignore most lines with 4 whitespaces in front.
+        @a.err("Skipping #{ line }.", 2)        
+      elsif (error)							# If there's an error, catch the lines in the diff.
+        processed.push(line)
+        @a.err("Caught because error flagging.", 2)
+      elsif (line.match(/^\W{4}\w/) and previous.match(/^\W{6}\w/))	# If we're at the start of an error, start recording and catch the line before.
+        error = FALSE
+        processed.push(previous)
+        processed.push(line)
+        @a.err("Caught an ending line and previous.", 2)
+      elsif (line.match(/^\W{6}\w/) and previous.match(/^\W{4}\w/))	# If we're at the end of an error, stop recording.
+        error = TRUE
+        processed.push( " >>>> FAILED AT <<<< " )
+        processed.push(previous)
+        processed.push(line)
+        @a.err("Caught a beginning line.", 2)
+      elsif (line.match(/^\W{6}\w/))					# Catch any lines that happen to be indented enough to be error or diff.
+        processed.push(line)
+        @a.err("Catching an error because of indentation.", 2)
+      elsif (line.match(/^\w/))						# Catch any lines that haven't got any indentation.
+        processed.push(line)
+        @a.err("Catching a line because of lack of indentation.", 2)
       end
+      
+      previous = line
 
     }
 
+    puts "Processed is: "
+    puts processed
+
+    t = Time.new
+    time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("-") ].join(" ")
+
+    puts "Processed at: #{ time }"
+
+    report = processed.join ("")
+
+    File.write( "./reports/Octypus Report - #{ time }", report )
+
   end
 
-}
+end
+
+filter = Cuisinart.new(a)
+filter.run (result)
 
 # The 'many if many one if one' thing is probably going to be a PITA to implement for a very small run cost.
 # Leave it off for later, if there are issues with resource hogging on highly asymmetrical runs (i.e., one
