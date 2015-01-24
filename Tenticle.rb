@@ -4,12 +4,18 @@ require "highline/import"
 require "logger"
 require "trollop"
 
+@errorlevel = ''
+@tests = []
+@servers = []
+@options = []
+@file = ''
+@times = ''
+
   # trollop options settable at command line include:
   # (S)ervers to test on
   # (T)ests to run
   # (I)terations of each test
   # (E)rrorlevel
-  # (V)erbose mode
   # (B)rowser flavor
   # b(R)owser version
 
@@ -28,24 +34,30 @@ require "trollop"
 #      @servers = ['avanboxel', 'qa-eris']
 #      @options = {}
 #      @file = ''
-#      @verbose = false                                                     # Keep it quiet
-      @errorlevel = 2                                                       # Fatals
+#      @errorlevel = 0                                                       # Fatals
 #      @times = 3                                                           # By default, if you don't specify repetitions, there's just three.
 
       @options = Trollop::options do
-        opt :file, "Filename", :type => :string, :default => 'cfg.yml'      # Default config is 'cfg.yml'
-        opt :iterations, "Iterations", :type => :integer, :default => 3     # Default number of iterations is 3
-        opt :servers, "Servers", :type => :strings, :default => ['qa-eris'] # Defaults to qa-eris
-        opt :tests, "Tests", :type => :strings, :default => ['u937']        # Defaults to u937
-        opt :errorlevel, "Error level", :type => :integer, :default => 2    # Defaults to 2
-        opt :platform, "OS", :type => :string, :default => 'Windows 8'      # Defaults to Win8
-        opt :browser, "Browser", :type => :string, :default => 'firefox'    # No default
-        opt :browserversion, "Browser version", :short => "-r",             # No default
+        opt :file, "Filename", :type => :string, :default => 'cfg.yml'      			# Default config is 'cfg.yml'
+        opt :iterations, "Iterations", :type => :integer, :default => 3     			# Default number of iterations is 3
+        opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-janus'] 	# Defaults to qa-eris
+        opt :tests, "Tests", :type => :strings, :default => ['very_tiny_perf_test']		# Defaults to u937
+        opt :errorlevel, "Error level", :type => :integer, :default => 0    			# Defaults to 0 (fatals only)
+        opt :platform, "OS", :type => :string, :default => 'Windows 8'      			# Defaults to Win8
+        opt :browser, "Browser", :type => :string, :default => 'firefox'    			# Defaults to firefox
+        opt :browserversion, "Browser version", :short => "-r",             			# Defaults to 33
           :type => :string, :default => '33'
       end
 
-      puts "Command line arguments are: #{ p @options }"
+      err( "Command line arguments are: #{ p @options }", 2 )
+      @file = @options[:file]
+      @times = @options[:iterations]
+      @servers = @options[:servers]
+      @tests = @options[:tests]
       @errorlevel = @options[:errorlevel]
+      @platform = @options[:platform]
+      @browser = @options[:browser]
+      @version = @options[:version]
 
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
@@ -73,30 +85,38 @@ require "trollop"
     end
 
     def warnize (message)
-      ize("Warning", message)
+      if ( @errorlevel >= 1 )
+        ize("Warning", message)
+      end
     end
 
     def diagnize (message)
-      ize("Diagnostics", message)
+      if ( @errorlevel >= 2 )
+        ize("Diagnostics", message)
+      end 
     end
 
     def err (message, level)
 
-      if (level == 0) then
+      if (level == 0)
         puts "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
         exit
 
-      elsif (level == 1) then
+      elsif (level == 1)
 
-        if (@errorlevel >= 1) then puts warnize(message) end
+        if (@errorlevel >= 1)
+          puts warnize(message)
+        end
 
-      elsif (level == 2) then
+      elsif (level == 2)
 
-        if (@errorlevel >= 2) then puts diagnize(message) end
+        if (@errorlevel >= 2)
+          puts diagnize(message)
+        end
 
       else
 
-        err("Error handling error ", 0)
+        err("Unknown error ", 0)
 
       end
 
