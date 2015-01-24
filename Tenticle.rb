@@ -4,13 +4,6 @@ require "highline/import"
 require "logger"
 require "trollop"
 
-@errorlevel = ''
-@tests = []
-@servers = []
-@options = []
-@file = ''
-@times = ''
-
   # trollop options settable at command line include:
   # (S)ervers to test on
   # (T)ests to run
@@ -24,7 +17,12 @@ require "trollop"
     # Cups provides Tenticle with grip. In this case, that means setting configuration
     # state and handling command line alterations for it.
 
-    attr_accessor :options
+    @errorlevel = ''
+    @tests = []
+    @servers = []
+    @options = []
+    @file = ''
+    @times = ''
 
     def initialize (args)
 
@@ -38,14 +36,14 @@ require "trollop"
 #      @times = 3                                                           # By default, if you don't specify repetitions, there's just three.
 
       @options = Trollop::options do
-        opt :file, "Filename", :type => :string, :default => 'cfg.yml'      			# Default config is 'cfg.yml'
-        opt :iterations, "Iterations", :type => :integer, :default => 3     			# Default number of iterations is 3
-        opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-janus'] 	# Defaults to qa-eris
-        opt :tests, "Tests", :type => :strings, :default => ['very_tiny_perf_test']		# Defaults to u937
-        opt :errorlevel, "Error level", :type => :integer, :default => 0    			# Defaults to 0 (fatals only)
-        opt :platform, "OS", :type => :string, :default => 'Windows 8'      			# Defaults to Win8
-        opt :browser, "Browser", :type => :string, :default => 'firefox'    			# Defaults to firefox
-        opt :browserversion, "Browser version", :short => "-r",             			# Defaults to 33
+        opt :file, "Filename", :type => :string, :default => 'cfg.yml'      			         # Default config is 'cfg.yml'
+        opt :iterations, "Iterations", :type => :integer, :default => 3     			         # Default number of iterations is 3
+        opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-janus'] 	 # Defaults to qa-eris
+        opt :tests, "Tests", :type => :strings, :default => ['very_tiny_perf_test']		     # Defaults to u937
+        opt :errorlevel, "Error level", :type => :integer, :default => 0    			         # Defaults to 0 (fatals only)
+        opt :platform, "OS", :type => :string, :default => 'Windows 8'      			         # Defaults to Win8
+        opt :browser, "Browser", :type => :string, :default => 'firefox'    			         # Defaults to firefox
+        opt :browserversion, "Browser version", :short => "-r",             			         # Defaults to 33
           :type => :string, :default => '33'
       end
 
@@ -93,7 +91,7 @@ require "trollop"
     def diagnize (message)
       if ( @errorlevel >= 2 )
         ize("Diagnostics", message)
-      end 
+      end
     end
 
     def err (message, level)
