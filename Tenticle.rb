@@ -83,15 +83,15 @@ require "trollop"
     end
 
     def warnize (message)
-#      if ( @errorlevel >= 1 )
+      if ( @errorlevel >= 1 )
         puts ize("Warning", message)
-#      end
+      end
     end
 
     def diagnize (message)
-#      if ( @errorlevel >= 2 )
+      if ( @errorlevel >= 2 )
         puts ize("Diagnostics", message)
-#      end
+      end
     end
 
     def err (message, level)
@@ -100,11 +100,11 @@ require "trollop"
         "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
         exit
 
-      elsif ((level == 1) and (@errorlevel.to_i >= 1))
+      elsif (level == 1)
 
           warnize(message)
 
-      elsif ((level == 2) and (@errorlevel.to_i >= 2))
+      elsif (level == 2)
 
           diagnize(message)
 
