@@ -174,25 +174,25 @@ class Hopper
 
           @browser = browser
 
-            @platforms.each { |platform|
+          @platforms.each { |platform|
 
-              @platform = platform
+            @platform = platform
 
-                @versions.each { |version|
+            @versions.each { |version|
 
-                  tstamp = Time.new               # New timestamp for each run
-                  uid = %x( ruby uid.rb )             # New UID for each run
+              tstamp = Time.new               # New timestamp for each run
+              uid = %x( ruby uid.rb )             # New UID for each run
 
-                  # Pack up the vars into the executable string
-                  execstring = '/usr/bin/gless #{ test } #{ server } GE_BROWSER="#{ browser }" GE_PLATFORM="#{ platform }" GE_BROWSER_VERSION="#{ version }"'
-                  result = %x( #{execstring} 2>&1 )
+              # Pack up the vars into the executable string
+              execstring = '/usr/bin/gless #{ test } #{ server } GE_BROWSER="#{ browser }" GE_PLATFORM="#{ platform }" GE_BROWSER_VERSION="#{ version }"'
+              result = %x( #{execstring} 2>&1 )
 
-                  # File.write( "./raw/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result) # Drop the output into a file
-                  result = result.gsub(/\e\[\d{1,2}m/, '')            # Strip formatting
+              # File.write( "./raw/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result) # Drop the output into a file
+              result = result.gsub(/\e\[\d{1,2}m/, '')            # Strip formatting
 
 
-                  filter = Cuisinart.new(a)
-                  filter.run(result)
+              filter = Cuisinart.new(a)
+              filter.run(result)
 
                   # File.write( "./report/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result)  # Drop the report into a file
 
@@ -207,6 +207,8 @@ class Hopper
     }
 
   }
+
+  end
 
 end
 
