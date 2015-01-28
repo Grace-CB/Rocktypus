@@ -79,37 +79,37 @@ require "trollop"
     end
 
     def errorize (message)
-      ize("Error", message)
+      puts ize("Error", message)
     end
 
     def warnize (message)
       if ( @errorlevel >= 1 )
-        ize("Warning", message)
+        puts ize("Warning", message)
       end
     end
 
     def diagnize (message)
       if ( @errorlevel >= 2 )
-        ize("Diagnostics", message)
+        puts ize("Diagnostics", message)
       end
     end
 
     def err (message, level)
 
       if (level == 0)
-        puts "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
+        "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
         exit
 
       elsif (level == 1)
 
         if (@errorlevel >= 1)
-          puts warnize(message)
+          warnize(message)
         end
 
       elsif (level == 2)
 
         if (@errorlevel >= 2)
-          puts diagnize(message)
+          diagnize(message)
         end
 
       else
