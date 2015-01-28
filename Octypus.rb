@@ -142,6 +142,73 @@ class Cuisinart
 
 end
 
+class Hopper
+
+  def initialize (options)          # A six-item array with an integer (iteration count) and then five arrays
+                                    # -- servers, tests, browsers, platforms, versions
+    @o = options
+
+    @count        = @o[:count]
+    @servers      = @o[:servers]
+    @tests        = @o[:tests]
+    @browsers     = @o[:browsers]
+    @platforms    = @o[:platforms]
+    @versions     = @o[:versions]
+    @stats        = []
+
+    # create a timestamped directory for this batch of tests
+
+  end
+
+  def empty
+
+    @servers.each { |server|
+
+      @server = server
+
+      @tests.each { |test|
+
+        @test = test
+
+        @browsers.each { |browser|
+
+          @browser = browser
+
+            @platforms.each { |platform|
+
+              @platform = platform
+
+                @versions.each { |version|
+
+                  tstamp = Time.new               # New timestamp for each run
+                  uid = %x( ruby uid.rb )             # New UID for each run
+
+                  # Pack up the vars into the executable string
+                  execstring = '/usr/bin/gless #{ test } #{ server } GE_BROWSER="#{ browser }" GE_PLATFORM="#{ platform }" GE_BROWSER_VERSION="#{ version }"'
+                  result = %x( #{execstring} 2>&1 )
+
+                  # File.write( "./raw/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result) # Drop the output into a file
+                  result = result.gsub(/\e\[\d{1,2}m/, '')            # Strip formatting
+
+
+                  filter = Cuisinart.new(a)
+                  filter.run(result)
+
+                  # File.write( "./report/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result)  # Drop the report into a file
+
+                  # store the stat info
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+end
 
 # The 'many if many one if one' thing is probably going to be a PITA to implement for a very small run cost.
 # Leave it off for later, if there are issues with resource hogging on highly asymmetrical runs (i.e., one
