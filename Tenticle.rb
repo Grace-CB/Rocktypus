@@ -83,15 +83,15 @@ require "trollop"
     end
 
     def warnize (message)
-      if ( @errorlevel >= 1 )
+#      if ( @errorlevel >= 1 )
         puts ize("Warning", message)
-      end
+#      end
     end
 
     def diagnize (message)
-      if ( @errorlevel >= 2 )
+#      if ( @errorlevel >= 2 )
         puts ize("Diagnostics", message)
-      end
+#      end
     end
 
     def err (message, level)
