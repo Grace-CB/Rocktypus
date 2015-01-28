@@ -71,7 +71,7 @@ a.options[:tests].each {
 
 # Next up, we filter out errything that passes and report-format everything that doesn't. We've still got it in result.
 
-class Cuisinart 
+class Cuisinart
 
   include CommandLineReporter
 
@@ -99,7 +99,7 @@ class Cuisinart
       if (index <= 9)
 	next
       elsif (line.match(/^\W{4}\w/))					# Ignore most lines with 4 whitespaces in front.
-        @a.err("Skipping #{ line }.", 2)        
+        @a.err("Skipping #{ line }.", 2)
       elsif (error)							# If there's an error, catch the lines in the diff.
         processed.push(line)
         @a.err("Caught because error flagging.", 2)
@@ -121,7 +121,7 @@ class Cuisinart
         processed.push(line)
         @a.err("Catching a line because of lack of indentation.", 2)
       end
-      
+
       previous = line
 
     }
@@ -134,7 +134,7 @@ class Cuisinart
 
     puts "Processed at: #{ time }"
 
-    report = processed.join ("")
+    report = processed.join("")
 
     File.write( "./reports/Octypus Report - #{ time }", report )
 
@@ -142,8 +142,6 @@ class Cuisinart
 
 end
 
-filter = Cuisinart.new(a)
-filter.run (result)
 
 # The 'many if many one if one' thing is probably going to be a PITA to implement for a very small run cost.
 # Leave it off for later, if there are issues with resource hogging on highly asymmetrical runs (i.e., one
