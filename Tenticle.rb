@@ -96,15 +96,15 @@ require "trollop"
 
     def err (message, level)
 
-      if (level == 0)
+      if(level == 0)
         "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
         exit
 
-      elsif (level == 1)
+      elsif(level == 1)
 
           warnize(message)
 
-      elsif (level == 2)
+      elsif(level == 2)
 
           diagnize(message)
 
