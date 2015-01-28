@@ -4,12 +4,12 @@ require "highline/import"
 require "logger"
 require "trollop"
 
-  # trollop options settable at command line include:
-  # (S)ervers to test on
-  # (T)ests to run
-  # (I)terations of each test
-  # (E)rrorlevel
-  # (B)rowser flavor
+  #  trollop options settable at command line include:
+  #  (S)ervers to test on
+  #  (T)ests to run
+  #  (I)terations of each test
+  #  (E)rrorlevel
+  #  (B)rowser flavor
   # b(R)owser version
 
   class Cups
@@ -100,11 +100,11 @@ require "trollop"
         "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
         exit
 
-      elsif (level == 1) and (@errorlevel.to_i >= 1)
+      elsif ((level == 1) and (@errorlevel.to_i >= 1))
 
           warnize(message)
 
-      elsif (level == 2) and (@errorlevel.to_i >= 2)
+      elsif ((level == 2) and (@errorlevel.to_i >= 2))
 
           diagnize(message)
 
