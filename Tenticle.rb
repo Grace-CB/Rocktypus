@@ -100,11 +100,11 @@ require "trollop"
         "#{errorize(message)}  >>[FATAL. QUITTING.]<<  "
         exit
 
-      elsif (level == 1) and (@errorlevel >= 1)
+      elsif (level == 1) and (@errorlevel.to_i >= 1)
 
           warnize(message)
 
-      elsif (level == 2) and (@errorlevel >= 2)
+      elsif (level == 2) and (@errorlevel.to_i >= 2)
 
           diagnize(message)
 
