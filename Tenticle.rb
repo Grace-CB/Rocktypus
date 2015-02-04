@@ -83,6 +83,8 @@ require "command_line_reporter"
          @@logger.fatal("Unknown error level setting attempted. Exiting.")
       end
 
+      @@logger.info("logger level was set to #{ @@logger.level }")
+
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
       # the default options we want.
@@ -94,25 +96,25 @@ require "command_line_reporter"
 
     def err(message)
 
-      @logger.error(message)
+      @@logger.error(message)
 
     end
 
     def warn(message)
 
-      @logger.warn(message)
+      @@logger.warn(message)
 
     end
 
     def info(message)
 
-      @logger.info(message)
+      @@logger.info(message)
 
     end
 
     def fatal
 
-      @logger.fatal( "FATAL: " + message + " EXITING.")
+      @@logger.fatal( "FATAL: " + message + " EXITING.")
 
     end
 
@@ -190,7 +192,7 @@ require "command_line_reporter"
 
   class Hopper
 
-    def initialize (options)          # A six-item array with an integer (iteration count) and then five arrays
+    def initialize (options)          # A six-item hash with an integer (iteration count) and then five arrays
                                       # -- servers, tests, browsers, platforms, versions
       @o = options
 
