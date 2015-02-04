@@ -1,0 +1,116 @@
+
+
+
+Your current directory doesn't look right; putting you in /var/local/deploy/gless ; if that's not what you wanted, you want to clone qa-automation, and be in the gless dir.
+
+
+
+  0 2015.01.15-04:02:41 1421323361 /var/local/deploy/gless/features/support/server_data.rb:7: warning: already initialized constant CytobankUtil::ServerData::DefaultRolesFilepath
+  0 2015.01.15-04:02:41 1421323361 /var/local/deploy/gless/features/support/server_data.rb:7: warning: previous definition of DefaultRolesFilepath was here
+  0 2015.01.15-04:02:41 1421323361 @experiments
+  0 2015.01.15-04:02:41 1421323361 Feature: Cytobank Experiments
+  0 2015.01.15-04:02:41 1421323361
+  0 2015.01.15-04:02:41 1421323361   @u937
+  0 2015.01.15-04:02:41 1421323361   Scenario: Run The u937 Experiment                                              # features/cytobank/experiment.feature:5
+  8 2015.01.15-04:02:49 1421323369     Given I have configuration data for the requested server                     # features/support/step_definitions/cytobank_steps.rb:3
+  0 2015.01.15-04:02:49 1421323369     And I have the experiment data for 'u937'                                    # features/support/step_definitions/experiment_steps/login.rb:1
+  6 2015.01.15-04:02:55 1421323375     And I start the test framework                                               # features/support/step_definitions/cytobank_steps.rb:8
+  5 2015.01.15-04:03:00 1421323380     When I select my login server                                                # features/support/step_definitions/cytobank_steps.rb:26
+ 20 2015.01.15-04:03:20 1421323400     And I log in                                                                 # features/support/step_definitions/cytobank_steps.rb:30
+  0 2015.01.15-04:03:20 1421323400     Then I am on the experiments page                                            # features/support/step_definitions/experiment_steps/login.rb:45
+ 40 2015.01.15-04:04:00 1421323440     Given I have enough credits                                                  # features/support/step_definitions/experiment_steps/check_credits.rb:1
+ 37 2015.01.15-04:04:37 1421323477     And I open the experiment                                                    # features/support/step_definitions/experiment_steps/open_experiment.rb:1
+  2 2015.01.15-04:04:39 1421323479     When I clone the experiment                                                  # features/support/step_definitions/experiment_steps/open_experiment.rb:9
+  6 2015.01.15-04:04:45 1421323485     Then I am certain that the experiment got cloned                             # features/support/step_definitions/experiment_steps/open_experiment.rb:13
+  9 2015.01.15-04:04:54 1421323494     Given I open the edit experiment form                                        # features/support/step_definitions/experiment_steps/open_experiment.rb:38
+ 16 2015.01.15-04:05:10 1421323510     When I change the experiment name to start with "u937"                       # features/support/step_definitions/experiment_steps/open_experiment.rb:42
+ 23 2015.01.15-04:05:33 1421323533     Then The experiment name begins with "u937"                                  # features/support/step_definitions/experiment_steps/open_experiment.rb:47
+104 2015.01.15-04:07:17 1421323637     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+  1 2015.01.15-04:07:18 1421323638     When I open the plot statistics pane                                         # features/support/step_definitions/experiment_steps/annotate_channels.rb:1
+ 25 2015.01.15-04:07:43 1421323663     And I open the file categorization page                                      # features/support/step_definitions/experiment_steps/annotate_channels.rb:5
+ 13 2015.01.15-04:07:56 1421323676     Then I should have the right FCS file names                                  # features/support/step_definitions/experiment_steps/annotate_channels.rb:9
+ 17 2015.01.15-04:08:13 1421323693     And I should have the right panel assignments                                # features/support/step_definitions/experiment_steps/annotate_channels.rb:28
+113 2015.01.15-04:10:06 1421323806     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+  4 2015.01.15-04:10:10 1421323810     And I enable the conditions dimension                                        # features/support/step_definitions/experiment_steps/annotate_conditions.rb:1
+ 16 2015.01.15-04:10:26 1421323826     And I go to the conditions setup page                                        # features/support/step_definitions/experiment_steps/annotate_conditions.rb:8
+ 12 2015.01.15-04:10:38 1421323838     When I add the conditions                                                    # features/support/step_definitions/experiment_steps/annotate_conditions.rb:12
+  6 2015.01.15-04:10:44 1421323844     Then I am sure that the list of conditions is correct                        # features/support/step_definitions/experiment_steps/annotate_conditions.rb:19
+  1 2015.01.15-04:10:45 1421323845     Given I select the 'All Conditions' tab                                      # features/support/step_definitions/experiment_steps/annotate_conditions.rb:30
+ 14 2015.01.15-04:10:59 1421323859     When I rename the condition 'IFNg' to 'IFN-g'                                # features/support/step_definitions/experiment_steps/annotate_conditions.rb:24
+  4 2015.01.15-04:11:03 1421323863     Then I am sure that each list of conditions is correct                       # features/support/step_definitions/experiment_steps/annotate_conditions.rb:19
+ 29 2015.01.15-04:11:32 1421323892     And I am sure that the files are initially assigned correctly                # features/support/step_definitions/experiment_steps/annotate_conditions.rb:34
+  1 2015.01.15-04:11:33 1421323893     Given I select the 'All Conditions' tab                                      # features/support/step_definitions/experiment_steps/annotate_conditions.rb:30
+ 18 2015.01.15-04:11:51 1421323911     When I move file '2-5) U937 IL-4 + IFN-g' to condition 'IL-4 + IFNg'         # features/support/step_definitions/experiment_steps/annotate_conditions.rb:45
+ 21 2015.01.15-04:12:12 1421323932     And I move file '2-4) U937 IFN-g' to condition 'IFN-g'                       # features/support/step_definitions/experiment_steps/annotate_conditions.rb:45
+  3 2015.01.15-04:12:15 1421323935     Then I am sure that each list of conditions is correct                       # features/support/step_definitions/experiment_steps/annotate_conditions.rb:19
+ 27 2015.01.15-04:12:42 1421323962     And I am sure that the files are posteriorly assigned correctly              # features/support/step_definitions/experiment_steps/annotate_conditions.rb:34
+  0 2015.01.15-04:12:42 1421323962       expected: {"unstim"=>[{:filename=>"20071001-u937.001", :sample_name=>"1-2) U937 Unstim"}, {:filename=>"20071001-u937.008", :sample_name=>"2-2) U937 Unstim"}], "IL-4"=>[{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}], "IFN-g"=>[{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}, {:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}], "IL-4 + IFNg"=>[{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}], "G-CSF"=>[{:filename=>"20071001-u937.005", :sample_name=>"1-7) U937 G-CSF"}, {:filename=>"20071001-u937.012", :sample_name=>"2-6) U937 G-CSF"}], "IFN Type I"=>[{:filename=>"20071001-u937.006", :sample_name=>"1-8) U937 IFN Type I"}, {:filename=>"20071001-u937.013", :sample_name=>"2-7) U937 IFN Type I"}], "IL-6"=>[{:filename=>"20071001-u937.007", :sample_name=>"1-9) U937 IL-6"}, {:filename=>"20071001-u937.014", :sample_name=>"2-8) U937 IL-6"}], "Unassigned"=>[{:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}]}
+  0 2015.01.15-04:12:42 1421323962            got: {"unstim"=>[{:filename=>"20071001-u937.001", :sample_name=>"1-2) U937 Unstim"}, {:filename=>"20071001-u937.008", :sample_name=>"2-2) U937 Unstim"}], "IL-4"=>[{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}], "IFN-g"=>[{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}], "IL-4 + IFNg"=>[{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}], "G-CSF"=>[{:filename=>"20071001-u937.005", :sample_name=>"1-7) U937 G-CSF"}, {:filename=>"20071001-u937.012", :sample_name=>"2-6) U937 G-CSF"}], "IFN Type I"=>[{:filename=>"20071001-u937.006", :sample_name=>"1-8) U937 IFN Type I"}, {:filename=>"20071001-u937.013", :sample_name=>"2-7) U937 IFN Type I"}], "IL-6"=>[{:filename=>"20071001-u937.007", :sample_name=>"1-9) U937 IL-6"}, {:filename=>"20071001-u937.014", :sample_name=>"2-8) U937 IL-6"}], "Unassigned"=>[{:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}, {:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}]} (using ==)
+  0 2015.01.15-04:12:42 1421323962       Diff:
+  0 2015.01.15-04:12:42 1421323962       
+  0 2015.01.15-04:12:42 1421323962       @@ -1,9 +1,9 @@
+  0 2015.01.15-04:12:42 1421323962        "G-CSF" => [{:filename=>"20071001-u937.005", :sample_name=>"1-7) U937 G-CSF"}, {:filename=>"20071001-u937.012", :sample_name=>"2-6) U937 G-CSF"}],
+  0 2015.01.15-04:12:42 1421323962        "IFN Type I" => [{:filename=>"20071001-u937.006", :sample_name=>"1-8) U937 IFN Type I"}, {:filename=>"20071001-u937.013", :sample_name=>"2-7) U937 IFN Type I"}],
+  0 2015.01.15-04:12:42 1421323962       -"IFN-g" => [{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}, {:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}],
+  0 2015.01.15-04:12:42 1421323962       -"IL-4" => [{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}],
+  0 2015.01.15-04:12:42 1421323962       -"IL-4 + IFNg" => [{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}],
+  0 2015.01.15-04:12:42 1421323962       +"IFN-g" => [{:filename=>"20071001-u937.003", :sample_name=>"1-4) U937 IFNg"}],
+  0 2015.01.15-04:12:42 1421323962       +"IL-4" => [{:filename=>"20071001-u937.002", :sample_name=>"1-3) U937 IL-4"}, {:filename=>"20071001-u937.009", :sample_name=>"2-3) U937 IL-4"}, {:filename=>"20071001-u937.011", :sample_name=>"2-5) U937 IL-4 + IFN-g"}],
+  0 2015.01.15-04:12:42 1421323962       +"IL-4 + IFNg" => [{:filename=>"20071001-u937.004", :sample_name=>"1-6) U937 IL-4 + IFNg"}],
+  0 2015.01.15-04:12:42 1421323962        "IL-6" => [{:filename=>"20071001-u937.007", :sample_name=>"1-9) U937 IL-6"}, {:filename=>"20071001-u937.014", :sample_name=>"2-8) U937 IL-6"}],
+  0 2015.01.15-04:12:42 1421323962       -"Unassigned" => [{:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}],
+  0 2015.01.15-04:12:42 1421323962       +"Unassigned" => [{:filename=>"20071001-u937.010", :sample_name=>"2-4) U937 IFN-g"}, {:filename=>"20071001-u937.015", :sample_name=>"0) U937 Unstained"}],
+  0 2015.01.15-04:12:42 1421323962        "unstim" => [{:filename=>"20071001-u937.001", :sample_name=>"1-2) U937 Unstim"}, {:filename=>"20071001-u937.008", :sample_name=>"2-2) U937 Unstim"}],
+  0 2015.01.15-04:12:42 1421323962        (RSpec::Expectations::ExpectationNotMetError)
+  0 2015.01.15-04:12:42 1421323962       ./features/support/step_definitions/experiment_steps/annotate_conditions.rb:42:in `/^I am sure that the files are (initially|posteriorly) assigned correctly$/'
+  0 2015.01.15-04:12:42 1421323962       features/cytobank/experiment.feature:47:in `And I am sure that the files are posteriorly assigned correctly'
+  0 2015.01.15-04:12:42 1421323962     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+  0 2015.01.15-04:12:42 1421323962     When I move the dimension 'Conditions' after 'Channels'                      # features/support/step_definitions/experiment_steps/experiment_config.rb:1
+  0 2015.01.15-04:12:42 1421323962     And I save the working illustration                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5
+  0 2015.01.15-04:12:42 1421323962     Then I am sure that the selection of 'Channels' is initially correct         # features/support/step_definitions/experiment_steps/experiment_config.rb:32
+  0 2015.01.15-04:12:42 1421323962     And I am sure that the selection of 'Conditions' is initially correct        # features/support/step_definitions/experiment_steps/experiment_config.rb:32
+  0 2015.01.15-04:12:42 1421323962     And I am sure that the selection of 'Populations' is initially correct       # features/support/step_definitions/experiment_steps/experiment_config.rb:32
+  0 2015.01.15-04:12:42 1421323962     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+  0 2015.01.15-04:12:42 1421323962     When I update the selection of 'Channels'                                    # features/support/step_definitions/experiment_steps/experiment_config.rb:11
+  0 2015.01.15-04:12:42 1421323962     And I update the selection of 'Conditions'                                   # features/support/step_definitions/experiment_steps/experiment_config.rb:11
+  0 2015.01.15-04:12:42 1421323962     And I update the selection of 'Populations'                                  # features/support/step_definitions/experiment_steps/experiment_config.rb:11
+  0 2015.01.15-04:12:42 1421323962     And I save the working illustration                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5
+  0 2015.01.15-04:12:42 1421323962     Then I am sure that the selection of 'Channels' is posteriorly correct       # features/support/step_definitions/experiment_steps/experiment_config.rb:32
+  0 2015.01.15-04:12:42 1421323962     And I am sure that the selection of 'Conditions' is posteriorly correct      # features/support/step_definitions/experiment_steps/experiment_config.rb:32
+  0 2015.01.15-04:12:42 1421323962     And I am sure that the selection of 'Populations' is posteriorly correct     # features/support/step_definitions/experiment_steps/experiment_config.rb:32
+  0 2015.01.15-04:12:42 1421323962     Given I select Layout Placeholders                                           # features/support/step_definitions/experiment_steps/experiment_config.rb:49
+  0 2015.01.15-04:12:42 1421323962     When I move column 'p-Stat3-Ax488 - Panel 2' after 'p-Stat1-Ax647 - Panel 1' # features/support/step_definitions/experiment_steps/experiment_config.rb:53
+  0 2015.01.15-04:12:42 1421323962     And I move row 'IL-4 + IFNg' below 'IL-4'                                    # features/support/step_definitions/experiment_steps/experiment_config.rb:67
+  0 2015.01.15-04:12:42 1421323962     And I save the working illustration                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5
+  0 2015.01.15-04:12:42 1421323962     Given I select Layout Placeholders                                           # features/support/step_definitions/experiment_steps/experiment_config.rb:49
+  0 2015.01.15-04:12:42 1421323962     Then I am sure that the columns are correct                                  # features/support/step_definitions/experiment_steps/experiment_config.rb:81
+  0 2015.01.15-04:12:42 1421323962     And I am sure that the rows are correct                                      # features/support/step_definitions/experiment_steps/experiment_config.rb:92
+  0 2015.01.15-04:12:42 1421323962     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+  0 2015.01.15-04:12:42 1421323962     When I update the plot controls for the contour plots                        # features/support/step_definitions/experiment_steps/plots.rb:1
+  0 2015.01.15-04:12:42 1421323962     And I open Plot Statistics                                                   # features/support/step_definitions/experiment_steps/plots.rb:5
+  0 2015.01.15-04:12:42 1421323962     And I update the plot statistics for the contour plots                       # features/support/step_definitions/experiment_steps/plots.rb:9
+  0 2015.01.15-04:12:42 1421323962     And I save the working illustration                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5
+  0 2015.01.15-04:12:42 1421323962     Then I save the illustration as 'contour plots'                              # features/support/step_definitions/experiment_steps/plots.rb:30
+  0 2015.01.15-04:12:42 1421323962     And I am sure the printed plots are correct for the contour plots            # features/support/step_definitions/experiment_steps/plots.rb:13
+  0 2015.01.15-04:12:42 1421323962     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+  0 2015.01.15-04:12:42 1421323962     When I update the plot controls for the heatmaps                             # features/support/step_definitions/experiment_steps/plots.rb:1
+  0 2015.01.15-04:12:42 1421323962     And I open Plot Statistics                                                   # features/support/step_definitions/experiment_steps/plots.rb:5
+  0 2015.01.15-04:12:42 1421323962     And I update the plot statistics for the heatmaps                            # features/support/step_definitions/experiment_steps/plots.rb:9
+  0 2015.01.15-04:12:42 1421323962     And I save the working illustration                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5
+  0 2015.01.15-04:12:42 1421323962     Then I save the illustration as 'heatmaps'                                   # features/support/step_definitions/experiment_steps/plots.rb:30
+  0 2015.01.15-04:12:42 1421323962     And I am sure the printed plots are correct for the heatmaps                 # features/support/step_definitions/experiment_steps/plots.rb:13
+  0 2015.01.15-04:12:42 1421323962     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+  0 2015.01.15-04:12:42 1421323962     When I update the plot controls for the histogram overlays                   # features/support/step_definitions/experiment_steps/plots.rb:1
+  0 2015.01.15-04:12:42 1421323962     And I open Plot Statistics                                                   # features/support/step_definitions/experiment_steps/plots.rb:5
+  0 2015.01.15-04:12:42 1421323962     And I update the plot statistics for the histogram overlays                  # features/support/step_definitions/experiment_steps/plots.rb:9
+  0 2015.01.15-04:12:42 1421323962     And I save the working illustration                                          # features/support/step_definitions/experiment_steps/experiment_config.rb:5
+  0 2015.01.15-04:12:42 1421323962     Then I save the illustration as 'histogram overlays'                         # features/support/step_definitions/experiment_steps/plots.rb:30
+  0 2015.01.15-04:12:42 1421323962     And I am sure the printed plots are correct for the histogram overlays       # features/support/step_definitions/experiment_steps/plots.rb:13
+  0 2015.01.15-04:12:42 1421323962     Then I sign out                                                              # features/support/step_definitions/experiment_steps/logout.rb:1
+  0 2015.01.15-04:12:42 1421323962
+  0 2015.01.15-04:12:42 1421323962 Failing Scenarios:
+  0 2015.01.15-04:12:42 1421323962 cucumber features/cytobank/experiment.feature:5 # Scenario: Run The u937 Experiment
+  0 2015.01.15-04:12:42 1421323962
+  0 2015.01.15-04:12:42 1421323962 1 scenario (1 failed)
+  0 2015.01.15-04:12:42 1421323962 75 steps (1 failed, 43 skipped, 31 passed)
+  0 2015.01.15-04:12:42 1421323962 10m1.262s

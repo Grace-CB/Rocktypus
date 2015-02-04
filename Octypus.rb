@@ -21,15 +21,15 @@ a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
 #a.err("Exception level! Perfidy!", 0)
 #a.err("This doesn't happen.", 5)
 
-browser = a.options[:browser]
-platform = a.options[:platform]
-version = a.options[:browserversion]
+#browser = a.options[:browser]
+#platform = a.options[:platform]
+#version = a.options[:browserversion]
 
-fbrowser = "GE_BROWSER=\"#{browser}\""
-fplatform = "GE_PLATFORM=\"#{platform}\""
-fversion = "GE_BROWSER_VERSION=\"#{version}\""
+#fbrowser = "GE_BROWSER=\"#{browser}\""
+#fplatform = "GE_PLATFORM=\"#{platform}\""
+#fversion = "GE_BROWSER_VERSION=\"#{version}\""
 
-latterhalf = [fbrowser, fplatform, fversion].join( " " )
+#latterhalf = [fbrowser, fplatform, fversion].join( " " )
 
 # Refactor this later, and we can make it flexible enough to call single iteration
 # versions of the function for single-element lists but looped versions for multi-element
@@ -42,36 +42,41 @@ latterhalf = [fbrowser, fplatform, fversion].join( " " )
 
 result = []
 
-a.options[:tests].each {
-    |test|
+# This will be replaced by the Hopper class, which handles multiple options for each aspect of a gless run
+# EXCEPT browsers. At this point, I'd need to set up too much data validation and it would make runs wonky.
+#
+# TODO: Fix the browser-singularness.
 
-    a.err( "For each test, we are iterating.", 2 )
-
-    a.options[:servers].each {
-      |server|
-
-      a.err( "For each server, we are iterating.", 2 )
-
-      a.err( "Here's where we start the run of test #{ test } on server #{ server }.", 2)
-      formerhalf = "/usr/local/bin/gless #{test} #{server} "
-      a.err( "We'll use the execution string #{ formerhalf + latterhalf }", 2)
-      execstring = formerhalf + latterhalf
-      a.err( "This is our string post-concatenation: #{ execstring }", 2)
-      t = Time.new
-      time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("-") ].join(" ")
-      result = File.read( './raw/Output 12-3-14-19-1-2015-1-19-false-PST' )
+#a.options[:tests].each {
+#    |test|
+#
+#    a.info( "For each test, we are iterating.")
+#
+#    a.options[:servers].each {
+#      |server|
+#
+#      a.info( "For each server, we are iterating.")
+#
+#      a.info( "Here's where we start the run of test #{ test } on server #{ server }.")
+#      formerhalf = "/usr/local/bin/gless #{test} #{server} "
+#      a.info( "We'll use the execution string #{ formerhalf + latterhalf }")
+#      execstring = formerhalf + latterhalf
+#      a.info( "This is our string post-concatenation: #{ execstring }")
+#      t = Time.new
+#      time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("-") ].join(" ")
+#      result = File.read( './raw/Output 12-3-14-19-1-2015-1-19-false-PST' )
 #      result = %x( #{execstring} 2>&1 )
-      a.err( "Finished execution, outputting result.", 2 )
+#      a.info( "Finished execution, outputting result.")
 #      result = result.gsub(/\e\[\d{1,2}m/, '')
 #      File.write( "./raw/Output #{ tstamp.to_a.join("-")}", result)
-
-    }
-
-  }
+#
+#    }
+#
+#  }
 
 # Next up, we filter out errything that passes and report-format everything that doesn't. We've still got it in result.
 
-
+hopper = Tenticle::Hopper.new
 
 # The 'many if many one if one' thing is probably going to be a PITA to implement for a very small run cost.
 # Leave it off for later, if there are issues with resource hogging on highly asymmetrical runs (i.e., one
