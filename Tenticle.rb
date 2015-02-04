@@ -118,4 +118,145 @@ require "trollop"
 
   end
 
-end
+  class Cuisinart
+
+    include CommandLineReporter
+
+    @a = ''
+
+    def initialize(a)
+      self.formatter = 'progress'
+      @a = a
+    end
+
+    def run(result)
+      processed = []
+  #    report.do
+      length = result.length
+      index = 0
+
+      previous = ''
+      error = FALSE
+
+      result.each_line { |line|
+
+        line = line.gsub(/^.{,35}/, '')         # Strip timestamp and epoch and blank space after
+        index = index + 1
+
+        if (index <= 9)
+    next
+        elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
+          @a.err("Skipping #{ line }.", 2)
+        elsif (error)             # If there's an error, catch the lines in the diff.
+          processed.push(line)
+          @a.err("Caught because error flagging.", 2)
+        elsif (line.match(/^\W{4}\w/) and previous.match(/^\W{6}\w/)) # If we're at the start of an error, start recording and catch the line before.
+          error = FALSE
+          processed.push(previous)
+          processed.push(line)
+          @a.err("Caught an ending line and previous.", 2)
+        elsif (line.match(/^\W{6}\w/) and previous.match(/^\W{4}\w/)) # If we're at the end of an error, stop recording.
+          error = TRUE
+          processed.push( " >>>> FAILED AT <<<< " )
+          processed.push(previous)
+          processed.push(line)
+          @a.err("Caught a beginning line.", 2)
+        elsif (line.match(/^\W{6}\w/))          # Catch any lines that happen to be indented enough to be error or diff.
+          processed.push(line)
+          @a.err("Catching an error because of indentation.", 2)
+        elsif (line.match(/^\w/))           # Catch any lines that haven't got any indentation.
+          processed.push(line)
+          @a.err("Catching a line because of lack of indentation.", 2)
+        end
+
+        previous = line
+
+      }
+
+      puts "Processed is: "
+      puts processed
+
+      t = Time.new
+      time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("-") ].join(" ")
+
+      puts "Processed at: #{ time }"
+
+      report = processed.join("")
+
+      File.write( "./reports/Octypus Report - #{ time }", report )
+
+    end
+
+  end
+
+  class Hopper
+
+    def initialize (options)          # A six-item array with an integer (iteration count) and then five arrays
+                                      # -- servers, tests, browsers, platforms, versions
+      @o = options
+
+      @count        = @o[:count]
+      @servers      = @o[:servers]
+      @tests        = @o[:tests]
+      @browsers     = @o[:browsers]
+      @platforms    = @o[:platforms]
+      @versions     = @o[:versions]
+      @stats        = []
+
+      # create a timestamped directory for this batch of tests
+
+    end
+
+    def empty
+
+      @servers.each { |server|
+
+        @server = server
+
+        @tests.each { |test|
+
+          @test = test
+
+          @browsers.each { |browser|
+
+            @browser = browser
+
+            @platforms.each { |platform|
+
+              @platform = platform
+
+              @versions.each { |version|
+
+                tstamp = Time.new               # New timestamp for each run
+                uid = %x( ruby uid.rb )             # New UID for each run
+
+                # Pack up the vars into the executable string
+                execstring = '/usr/bin/gless #{ test } #{ server } GE_BROWSER="#{ browser }" GE_PLATFORM="#{ platform }" GE_BROWSER_VERSION="#{ version }"'
+                # result = %x( #{execstring} 2>&1 )
+
+                # File.write( "./raw/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result) # Drop the output into a file
+                result = result.gsub(/\e\[\d{1,2}m/, '')            # Strip formatting
+
+
+                filter = Cuisinart.new(a)
+                filter.run(result)
+
+                    # File.write( "./report/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result)  # Drop the report into a file
+
+                    # store the stat info
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    end
+
+  end
+
+  end
