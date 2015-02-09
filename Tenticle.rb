@@ -69,7 +69,30 @@ require "command_line_reporter"
       @browser = @options[:browser]
       @version = @options[:version]
 
-      @logger.info("@errorlevel was set to #{ @errorlevel }")
+     def self.err(message)
+
+       @logger.error(message)
+
+     end
+
+     def self.warn(message)
+
+       @logger.warn(message)
+
+     end
+
+     def self.info(message)
+
+       @logger.info(message)
+
+     end
+
+     def self.fatal
+
+       @logger.fatal( "FATAL: " + message + " EXITING.")
+
+     end
+
 
       if (@errorlevel.to_s == '2') 
          @logger.level = Logger::WARN
@@ -84,6 +107,7 @@ require "command_line_reporter"
          @logger.fatal("Unknown error level setting attempted. Exiting.")
       end
 
+      @logger.info("@errorlevel was set to #{ @errorlevel }")
       @logger.info("logger level was set to #{ @logger.level }")
 
       # The hierarchy here is going to be default file, then specified file,
@@ -92,30 +116,6 @@ require "command_line_reporter"
       # TODO: add this information to the helpfile that trollop does.
       #
       # MAYBE: Consider highline for a later 'interactive specification' option, though?
-
-    end
-
-    def err(message)
-
-      @logger.error(message)
-
-    end
-
-    def warn(message)
-
-      @logger.warn(message)
-
-    end
-
-    def info(message)
-
-      @logger.info(message)
-
-    end
-
-    def fatal
-
-      @logger.fatal( "FATAL: " + message + " EXITING.")
 
     end
 
