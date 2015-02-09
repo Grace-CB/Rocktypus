@@ -13,9 +13,12 @@ require "command_line_reporter"
   #  (B)rowser flavor
   # b(R)owser version
 
-  # @logger = Logger.new(STDOUT)
+  @logger = Logger.new(STDOUT)									# New logger at the module level
+  @logger.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
 
-  logger = Logger.new(STDOUT)
+  def self.log
+    @logger
+  end
 
   class Cups
 
@@ -32,15 +35,11 @@ require "command_line_reporter"
     @options = []
     @file = ''
     @times = ''
-    @@logger = logger
-
-    @@logger.formatter = proc { |severity, datetime, progname, msg| puts msg }
+    @logger = Tenticle.log
 
     def initialize (args)
 
       # These define the basic configuration. They're altered by command line options.
-
-      # @logger = Logger.new(STDOUT)
 
 #      @tests = ['test1', 'test2', 'test3']
 #      @servers = ['avanboxel', 'qa-eris']
@@ -70,22 +69,22 @@ require "command_line_reporter"
       @browser = @options[:browser]
       @version = @options[:version]
 
-      @@logger.info("@errorlevel was set to #{ @errorlevel }")
+      @logger.info("@errorlevel was set to #{ @errorlevel }")
 
       if (@errorlevel.to_s == '2') 
-         @@logger.level = Logger::WARN
+         @logger.level = Logger::WARN
       elsif (@errorlevel.to_s == '1')
-         @@logger.level = Logger::ERROR
+         @logger.level = Logger::ERROR
       elsif (@errorlevel.to_s == '0')
-         @@logger.level = Logger::FATAL
+         @logger.level = Logger::FATAL
       elsif (@errorlevel == NIL)
-         @@logger.level = Logger::FATAL
+         @logger.level = Logger::FATAL
       else
-         @@logger.level = Logger::FATAL
-         @@logger.fatal("Unknown error level setting attempted. Exiting.")
+         @logger.level = Logger::FATAL
+         @logger.fatal("Unknown error level setting attempted. Exiting.")
       end
 
-      @@logger.info("logger level was set to #{ @@logger.level }")
+      @logger.info("logger level was set to #{ @logger.level }")
 
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
@@ -98,25 +97,25 @@ require "command_line_reporter"
 
     def err(message)
 
-      @@logger.error(message)
+      @logger.error(message)
 
     end
 
     def warn(message)
 
-      @@logger.warn(message)
+      @logger.warn(message)
 
     end
 
     def info(message)
 
-      @@logger.info(message)
+      @logger.info(message)
 
     end
 
     def fatal
 
-      @@logger.fatal( "FATAL: " + message + " EXITING.")
+      @logger.fatal( "FATAL: " + message + " EXITING.")
 
     end
 
