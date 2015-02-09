@@ -192,6 +192,8 @@ require "command_line_reporter"
 
   class Hopper
 
+    attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions, :stats
+
     def initialize (options)          # A six-item hash with an integer (iteration count) and then five arrays
                                       # -- servers, tests, browsers, platforms, versions
       @o = options

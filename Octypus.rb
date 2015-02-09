@@ -76,7 +76,18 @@ result = []
 
 # Next up, we filter out errything that passes and report-format everything that doesn't. We've still got it in result.
 
-hopper = Tenticle::Hopper.new
+hopper = Tenticle::Hopper.new( 
+
+  :count => a.options.count,
+  :servers => a.options.servers,
+  :tests => a.options.tests,
+  :browsers => a.options.browsers,
+  :platforms => a.options.platforms,
+  :versions => a.options.versions
+
+)
+
+
 
 # The 'many if many one if one' thing is probably going to be a PITA to implement for a very small run cost.
 # Leave it off for later, if there are issues with resource hogging on highly asymmetrical runs (i.e., one
