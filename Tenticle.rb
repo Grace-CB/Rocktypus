@@ -15,9 +15,11 @@ require "command_line_reporter"
 
   # @logger = Logger.new(STDOUT)
 
+  logger = Logger.new(STDOUT)
+
   class Cups
 
-    attr_accessor :file, :time, :servers, :tests, :errorlevel, :platform, :browser, :version
+    attr_accessor :file, :times, :servers, :tests, :errorlevel, :platform, :browser, :version
 
     # require "logger"
 
@@ -30,7 +32,7 @@ require "command_line_reporter"
     @options = []
     @file = ''
     @times = ''
-    @@logger = Logger.new(STDOUT)
+    @@logger = logger
 
     @@logger.formatter = proc { |severity, datetime, progname, msg| puts msg }
 
