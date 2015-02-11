@@ -13,21 +13,19 @@ require "command_line_reporter"
   #  (B)rowser flavor
   # b(R)owser version
 
-  @logger = Logger.new(STDOUT)									# New logger at the module level
-  @logger.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
+  @@logger = Logger.new(STDOUT)									# New logger at the module level
+  @@logger.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
 
   def self.log
-    @logger
+    @@logger
   end
 
   class Cups
 
-    attr_accessor :file, :times, :servers, :tests, :errorlevel, :platform, :browser, :version
-
-    # require "logger"
+    attr_accessor :file, :times, :servers, :tests, :platforms, :browsers, :versions
 
     # Cups provides Tenticle with grip. In this case, that means setting configuration
-    # state and handling command line alterations for it.
+    # state, handling command line alterations for it, and wrapping logger methods.
 
     @errorlevel = ''
     @tests = []
@@ -35,7 +33,7 @@ require "command_line_reporter"
     @options = []
     @file = ''
     @times = ''
-    @logger = Tenticle.log
+    @@logger = Tenticle.log
 
     def initialize (args)
 
@@ -54,10 +52,10 @@ require "command_line_reporter"
         opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-janus'] 	 	 # Defaults to qa-eris
         opt :tests, "Tests", :type => :strings, :default => ['very_tiny_perf_test']		         # Defaults to u937
         opt :errorlevel, "Error level", :type => :integer, :default => 0    			         # Defaults to 0 (fatals only)
-        opt :platform, "OS", :type => :string, :default => 'Windows 8'      			         # Defaults to Win8
-        opt :browser, "Browser", :type => :string, :default => 'firefox'    			         # Defaults to firefox
-        opt :browserversion, "Browser version", :short => "-r",             			         # Defaults to 33
-          :type => :string, :default => '33'
+        opt :platform, "OS", :type => :strings, :default => ['Windows 8']      			         # Defaults to Win8
+        opt :browsers, "Browsers", :type => :strings, :default => ['firefox']    		         # Defaults to firefox
+        opt :version, "Browser versions", :short => "-r",             			                 # Defaults to 33
+          :type => :strings, :default => ['33']
       end
 
       @file = @options[:file]
@@ -65,50 +63,50 @@ require "command_line_reporter"
       @servers = @options[:servers]
       @tests = @options[:tests]
       @errorlevel = @options[:errorlevel]
-      @platform = @options[:platform]
-      @browser = @options[:browser]
-      @version = @options[:version]
+      @platforms = @options[:platform]
+      @browsers = @options[:browser]
+      @versions = @options[:version]
 
      def self.err(message)
 
-       @logger.error(message)
+       @@logger.error(message)
 
      end
 
      def self.warn(message)
 
-       @logger.warn(message)
+       @@logger.warn(message)
 
      end
 
      def self.info(message)
 
-       @logger.info(message)
+       @@logger.info(message)
 
      end
 
      def self.fatal
 
-       @logger.fatal( "FATAL: " + message + " EXITING.")
+       @@logger.fatal( "FATAL: " + message + " EXITING.")
 
      end
 
 
       if (@errorlevel.to_s == '2') 
-         @logger.level = Logger::WARN
+         @@logger.level = Logger::WARN
       elsif (@errorlevel.to_s == '1')
-         @logger.level = Logger::ERROR
+         @@logger.level = Logger::ERROR
       elsif (@errorlevel.to_s == '0')
-         @logger.level = Logger::FATAL
+         @@logger.level = Logger::FATAL
       elsif (@errorlevel == NIL)
-         @logger.level = Logger::FATAL
+         @@logger.level = Logger::FATAL
       else
-         @logger.level = Logger::FATAL
-         @logger.fatal("Unknown error level setting attempted. Exiting.")
+         @@logger.level = Logger::FATAL
+         @@logger.fatal("Unknown error level setting attempted. Exiting.")
       end
 
-      @logger.info("@errorlevel was set to #{ @errorlevel }")
-      @logger.info("logger level was set to #{ @logger.level }")
+      @@logger.info("@errorlevel was set to #{ @errorlevel }")
+      @@logger.info("logger level was set to #{ @@logger.level }")
 
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
@@ -238,16 +236,15 @@ require "command_line_reporter"
 
                 # Pack up the vars into the executable string
                 execstring = '/usr/bin/gless #{ test } #{ server } GE_BROWSER="#{ browser }" GE_PLATFORM="#{ platform }" GE_BROWSER_VERSION="#{ version }"'
-                # result = %x( #{execstring} 2>&1 )
+                result = %x( #{execstring} 2>&1 )
 
-                # File.write( "./raw/Output UID-#{uid}--TIME-#{ time }", result) # Drop the output into a file
+                File.write( "./raw/Output UID-#{uid}--TIME-#{ time }", result) # Drop the output into a file
                 result = result.gsub(/\e\[\d{1,2}m/, '')            # Strip formatting
-
 
                 filter = Cuisinart.new(a)
                 filter.run(result)
 
-                # File.write( "./report/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result)  # Drop the report into a file
+                File.write( "./report/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result)  # Drop the report into a file
 
                 # store the stat info
 
