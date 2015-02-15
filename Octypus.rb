@@ -4,7 +4,7 @@ require './Tenticle'
 require 'yaml'
 require 'command_line_reporter'
 
-a = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
+cups = Tenticle::Cups.new(ARGV)  # Create a tenticle and init default options,
                               # check for incoming command line options,
                               # etc. etc.
 
@@ -78,14 +78,16 @@ result = []
 # The hopper calls for the Cuisinart to filter out errything that passes and report-format everything that doesn't. We
 # still put the raw stuff in the raw file, and filtering gives us the report version.
 
+p cups
+
 hopper = Tenticle::Hopper.new( 
 
-  :count => a.times,
-  :servers => a.servers,
-  :tests => a.tests,
-  :browsers => a.browsers,
-  :platforms => a.platforms,
-  :versions => a.versions
+  :count => cups.times,
+  :servers => cups.servers,
+  :tests => cups.tests,
+  :browsers => cups.browsers,
+  :platforms => cups.platforms,
+  :versions => cups.versions
 
 )
 

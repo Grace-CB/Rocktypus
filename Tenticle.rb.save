@@ -13,11 +13,11 @@ require "command_line_reporter"
   #  (B)rowser flavor
   # b(R)owser version
 
-  $logger = Logger.new(STDOUT)									# New logger at the module level
-  $logger.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
+  @@logger = Logger.new(STDOUT)									# New logger at the module level
+  @@logger.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
 
   def self.log
-    $logger
+    @@logger
   end
 
   class Cups
@@ -33,7 +33,7 @@ require "command_line_reporter"
     @options = []
     @file = ''
     @times = ''
-    @browsers = []
+    @@logger = Tenticle.log
 
     def initialize (args)
 
@@ -49,7 +49,7 @@ require "command_line_reporter"
       @options = Trollop::options do
         opt :file, "Filename", :type => :string, :default => 'cfg.yml'      			         # Default config is 'cfg.yml'
         opt :iterations, "Iterations", :type => :integer, :default => 3     			         # Default number of iterations is 3
-        opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-charon'] 	 	 # Defaults to qa-eris
+        opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-janus'] 	 	 # Defaults to qa-eris
         opt :tests, "Tests", :type => :strings, :default => ['very_tiny_perf_test']		         # Defaults to u937
         opt :errorlevel, "Error level", :type => :integer, :default => 0    			         # Defaults to 0 (fatals only)
         opt :platform, "OS", :type => :strings, :default => ['Windows 8']      			         # Defaults to Win8
@@ -64,49 +64,49 @@ require "command_line_reporter"
       @tests = @options[:tests]
       @errorlevel = @options[:errorlevel]
       @platforms = @options[:platform]
-      @browsers = @options[:browsers]
+      @browsers = @options[:browser]
       @versions = @options[:version]
 
      def self.err(message)
 
-       $logger.error(message)
+       @@logger.error(message)
 
      end
 
      def self.warn(message)
 
-       $logger.warn(message)
+       @@logger.warn(message)
 
      end
 
      def self.info(message)
 
-       $logger.info(message)
+       @@logger.info(message)
 
      end
 
      def self.fatal
 
-       $logger.fatal( "FATAL: " + message + " EXITING.")
+       @@logger.fatal( "FATAL: " + message + " EXITING.")
 
      end
 
 
       if (@errorlevel.to_s == '2') 
-         $logger.level = Logger::WARN
+         @@logger.level = Logger::WARN
       elsif (@errorlevel.to_s == '1')
-         $logger.level = Logger::ERROR
+         @@logger.level = Logger::ERROR
       elsif (@errorlevel.to_s == '0')
-         $logger.level = Logger::FATAL
+         @@logger.level = Logger::FATAL
       elsif (@errorlevel == NIL)
-         $logger.level = Logger::FATAL
+         @@logger.level = Logger::FATAL
       else
-         $logger.level = Logger::FATAL
-         $logger.fatal("Unknown error level setting attempted. Exiting.")
+         @@logger.level = Logger::FATAL
+         @@logger.fatal("Unknown error level setting attempted. Exiting.")
       end
 
-      $logger.info("@errorlevel was set to #{ @errorlevel }")
-      $logger.info("logger level was set to #{ $logger.level }")
+      @@logger.info("@errorlevel was set to #{ @errorlevel }")
+      @@logger.info("logger level was set to #{ @@logger.level }")
 
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
@@ -122,75 +122,51 @@ require "command_line_reporter"
   class Cuisinart
 
     include CommandLineReporter
+    a = ''
 
-    @lines = ''
+    def initialize(a)
+      self.formatter = 'progress'
+      @a = a
+    end
 
-      def err(message)
+    def run(result)
+      processed = []
+  #    report.do
+      length = result.length
+      index = 0
 
-        $logger.error(message)
+      previous = ''
+      error = FALSE
 
-      end
-
-      def warn(message)
-
-        $logger.warn(message)
-
-      end
-
-      def info(message)
-
-        $logger.info(message)
-
-      end
-
-      def fatal
-
-        $logger.fatal( "FATAL: " + message + " EXITING.")
-
-      end
-
-      def initialize()
-        self.formatter = 'progress'
-      end
-
-      def run(result)
-        processed = []
-    #    report.do
-        length = result.length
-        index = 0
-
-        previous = ''
-        error = FALSE
-
-        result.each_line { |line|
+      result.each_line { |line|
 
         line = line.gsub(/^.{,35}/, '')         # Strip timestamp and epoch and blank space after
         index = index + 1
 
         if (index <= 9)
-          next
+    next
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
-          info("Skipping #{ line }.")
+          @a.info("Skipping #{ line }.")
         elsif (error)             # If there's an error, catch the lines in the diff.
           processed.push(line)
-          info("Caught because error flagging.")
+          @a.info("Caught because error flagging.")
         elsif (line.match(/^\W{4}\w/) and previous.match(/^\W{6}\w/)) # If we're at the start of an error, start recording and catch the line before.
           error = FALSE
           processed.push(previous)
           processed.push(line)
-          info("Caught an ending line and previous.")
+          @a.info("Caught an ending line and previous.")
         elsif (line.match(/^\W{6}\w/) and previous.match(/^\W{4}\w/)) # If we're at the end of an error, stop recording.
           error = TRUE
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
-          info("Caught a beginning line.")
+          @a.info("Caught a beginning line.")
         elsif (line.match(/^\W{6}\w/))          # Catch any lines that happen to be indented enough to be error or diff.
           processed.push(line)
-          info("Catching an error because of indentation.")
+          @a.info("Catching an error because of indentation.")
         elsif (line.match(/^\w/))           # Catch any lines that haven't got any indentation.
           processed.push(line)
-          info("Catching a line because of lack of indentation.")
+          @a.info("Catching a line because of lack of indentation.")
         end
 
         previous = line
@@ -201,13 +177,13 @@ require "command_line_reporter"
       puts processed
 
       t = Time.new
-      time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("=") ].join(" ")
+      time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("-") ].join(" ")
 
       puts "Processed at: #{ time }"
 
       report = processed.join("")
 
-      report
+      File.write( "./reports/Octypus Report - #{ time }", report )
 
     end
 
@@ -233,30 +209,6 @@ require "command_line_reporter"
 
     end
 
-    def err(message)
-
-      $logger.error(message)
-
-    end
-
-    def warn(message)
-
-      $logger.warn(message)
-
-    end
-
-    def info(message)
-
-      $logger.info(message)
-
-    end
-
-    def self.fatal
-
-      $logger.fatal( "FATAL: " + message + " EXITING.")
-
-    end
-
     def empty
 
       @servers.each { |server|
@@ -277,28 +229,22 @@ require "command_line_reporter"
 
               @versions.each { |version|
 
-                t = Time.new                                          	        # New timestamp for each run
+                tstamp = Time.new                                          	# New timestamp for each run
                 time = [ [ t.day, t.mon, t.year ].join("-"),			# Format for the report
-                         [ t.hour, t.min, t.sec ].join("=") ].join(" ")
+                         [ t.hour, t.min, t.sec ].join("-") ].join(" ")
                 uid = %x( ruby uid.rb )             				# New UID for each run
-                uid.chomp
 
                 # Pack up the vars into the executable string
-                execstring = '/usr/local/bin/gless ' + 
-                             test + " " + server + " GE_BROWSER=" + 
-                             browser + ' GE_PLATFORM="' + platform + '"' + " GE_BROWSER_VERSION=" + version
-                puts execstring
-                result = %x( #{ execstring } 2>&1 )
+                execstring = '/usr/bin/gless #{ test } #{ server } GE_BROWSER="#{ browser }" GE_PLATFORM="#{ platform }" GE_BROWSER_VERSION="#{ version }"'
+                result = %x( #{execstring} 2>&1 )
 
-		info( "Finished the executions." )
+                File.write( "./raw/Output UID-#{uid}--TIME-#{ time }", result) # Drop the output into a file
+                result = result.gsub(/\e\[\d{1,2}m/, '')            # Strip formatting
 
-                File.write( "./raw/Output UID-#{uid}--TIME-#{ time }", result) # Drop the raw output into a file
-                result = result.gsub(/\e\[\d{1,2}m/, '')                       # Strip formatting
+                filter = Cuisinart.new(a)
+                filter.run(result)
 
-                filter = Cuisinart.new()
-                report = filter.run(result)
-
-                File.write( "./reports/Output UID-#{uid}--TIME-#{ time }", report)  # Drop the report into a file
+                File.write( "./report/Output UID-#{uid}--TIME-#{ tstamp.to_a.join("-") }", result)  # Drop the report into a file
 
                 # store the stat info
 

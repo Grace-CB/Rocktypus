@@ -1,0 +1,8 @@
+
+
+
+Your current directory doesn't look right; putting you in /var/local/deploy/gless ; if that's not what you wanted, you want to clone qa-automation, and be in the gless dir.
+
+
+
+First argument needs to be a cucumber feature tag as we use them, which means nothing but lowercase letters, numbers, and underscores.
