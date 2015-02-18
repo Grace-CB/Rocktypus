@@ -123,7 +123,14 @@ require "command_line_reporter"
 
     include CommandLineReporter
 
+    attr_accessor :fail
+
     @lines = ''
+    @fail = false
+
+      def rj(digit)					# sub for right justifying with zeros on date numbers
+        return digit.to_s.rjust(2, "0")
+      end
 
       def err(message)
 
@@ -167,20 +174,25 @@ require "command_line_reporter"
         line = line.gsub(/^.{,35}/, '')         # Strip timestamp and epoch and blank space after
         index = index + 1
 
-        if (index <= 9)
+        if (index <= 9)				# Ignore the first nine lines.
           next
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
           info("Skipping #{ line }.")
-        elsif (error)             # If there's an error, catch the lines in the diff.
+        elsif (error)             		# If there's an error, catch the lines in the diff.
           processed.push(line)
           info("Caught because error flagging.")
-        elsif (line.match(/^\W{4}\w/) and previous.match(/^\W{6}\w/)) # If we're at the start of an error, start recording and catch the line before.
-          error = FALSE
+        elsif (
+         line.match(/^\W{4}\w/) and 
+         previous.match(/^\W{6}\w/) )  		# If we're at the start of an error, start recording and catch the line before.
+          error = false
           processed.push(previous)
           processed.push(line)
           info("Caught an ending line and previous.")
-        elsif (line.match(/^\W{6}\w/) and previous.match(/^\W{4}\w/)) # If we're at the end of an error, stop recording.
-          error = TRUE
+        elsif (
+         line.match(/^\W{6}\w/) and 
+         previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
+          error = true
+          @fail = true
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
@@ -188,12 +200,12 @@ require "command_line_reporter"
         elsif (line.match(/^\W{6}\w/))          # Catch any lines that happen to be indented enough to be error or diff.
           processed.push(line)
           info("Catching an error because of indentation.")
-        elsif (line.match(/^\w/))           # Catch any lines that haven't got any indentation.
+        elsif (line.match(/^\w/))           	# Catch any lines that haven't got any indentation.
           processed.push(line)
           info("Catching a line because of lack of indentation.")
         end
 
-        previous = line
+        previous = line				# Next line. Store the last one.
 
       }
 
@@ -201,7 +213,7 @@ require "command_line_reporter"
       puts processed
 
       t = Time.new
-      time = [ [ t.day, t.mon, t.year ].join("-"), [ t.hour, t.min, t.sec ].join("=") ].join(" ")
+      time = [ [ rj(t.day), rj(t.mon), t.year ].join("-"), [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
 
       puts "Processed at: #{ time }"
 
@@ -217,6 +229,10 @@ require "command_line_reporter"
 
     attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions, :stats
 
+    def rj(digit)
+      return digit.to_s.rjust(2, "0")
+    end
+
     def initialize (options)          # A six-item hash with an integer (iteration count) and then five arrays
                                       # -- servers, tests, browsers, platforms, versions
       @o = options
@@ -227,7 +243,7 @@ require "command_line_reporter"
       @browsers     = @o[:browsers]
       @platforms    = @o[:platforms]
       @versions     = @o[:versions]
-      @stats        = []
+      @stats        = {}
 
       # create a timestamped directory for this batch of tests
 
@@ -259,6 +275,9 @@ require "command_line_reporter"
 
     def empty
 
+      @uid = %x( ruby uid.rb )
+      @uid = @uid.chomp
+
       @servers.each { |server|
 
         @server = server
@@ -277,11 +296,13 @@ require "command_line_reporter"
 
               @versions.each { |version|
 
+                runs = 0
+
+                while runs < @count
+
                 t = Time.new                                          	        # New timestamp for each run
-                time = [ [ t.day, t.mon, t.year ].join("-"),			# Format for the report
-                         [ t.hour, t.min, t.sec ].join("=") ].join(" ")
-                uid = %x( ruby uid.rb )             				# New UID for each run
-                uid.chomp
+                time = [ [ rj(t.day), rj(t.mon), t.year ].join("-"),			# Format for the report
+                         [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
 
                 # Pack up the vars into the executable string
                 execstring = '/usr/local/bin/gless ' + 
@@ -292,15 +313,25 @@ require "command_line_reporter"
 
 		info( "Finished the executions." )
 
-                File.write( "./raw/Output UID-#{uid}--TIME-#{ time }", result) # Drop the raw output into a file
-                result = result.gsub(/\e\[\d{1,2}m/, '')                       # Strip formatting
+                File.write( "./raw/Output ##{@uid}-#{ time }", result) 		# Drop the raw output into a file
+                result = result.gsub(/\e\[\d{1,2}m/, '')                       		# Strip formatting
 
                 filter = Cuisinart.new()
-                report = filter.run(result)
+                filtered = filter.run(result)
 
-                File.write( "./reports/Output UID-#{uid}--TIME-#{ time }", report)  # Drop the report into a file
+                File.write( "./filtered/Output ##{@uid}-#{ time }", filtered)  	# Drop the filtered into a file
 
-                # store the stat info
+                run_tag = "Run " + runs.to_s
+                server_tag = "Server " + @server
+                inner_hash = { server_tag => filter.fail.to_s }
+
+                @stats[run_tag] = inner_hash			  	# Catch the fail state for stats
+
+                # store the stat info here
+
+                runs = runs + 1
+
+                end
 
             }
 
@@ -311,6 +342,13 @@ require "command_line_reporter"
       }
 
     }
+
+    t = Time.new                                                    # New timestamp for each run
+    time = [ [ rj(t.day), rj(t.mon), t.year ].join("-"),                    # Format for the report
+           [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
+
+
+    File.write( "./reports/Output ##{@uid}-#{ time }", @stats.to_s )
 
     end
 
