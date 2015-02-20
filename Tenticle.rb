@@ -20,6 +20,10 @@ require "command_line_reporter"
     $logger
   end
 
+  @@fail = ""
+
+  $stats = {}
+
   class Cups
 
     attr_accessor :file, :times, :servers, :tests, :platforms, :browsers, :versions
@@ -126,7 +130,7 @@ require "command_line_reporter"
     attr_accessor :fail
 
     @lines = ''
-    @fail = false
+    @@fail = "success"
 
       def rj(digit)					# sub for right justifying with zeros on date numbers
         return digit.to_s.rjust(2, "0")
@@ -167,7 +171,9 @@ require "command_line_reporter"
         index = 0
 
         previous = ''
-        error = FALSE
+        error = false
+
+        @@fail = "success"
 
         result.each_line { |line|
 
@@ -192,7 +198,7 @@ require "command_line_reporter"
          line.match(/^\W{6}\w/) and 
          previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
           error = true
-          @fail = true
+          @@fail = "failure"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
@@ -208,6 +214,7 @@ require "command_line_reporter"
         previous = line				# Next line. Store the last one.
 
       }
+
 
       puts "Processed is: "
       puts processed
@@ -243,7 +250,7 @@ require "command_line_reporter"
       @browsers     = @o[:browsers]
       @platforms    = @o[:platforms]
       @versions     = @o[:versions]
-      @stats        = {}
+
 
       # create a timestamped directory for this batch of tests
 
@@ -314,7 +321,7 @@ require "command_line_reporter"
 		info( "Finished the executions." )
 
                 File.write( "./raw/Output ##{@uid}-#{ time }", result) 		# Drop the raw output into a file
-                result = result.gsub(/\e\[\d{1,2}m/, '')                       		# Strip formatting
+                result = result.gsub(/\e\[\d{1,2}m/, '')                       	# Strip formatting
 
                 filter = Cuisinart.new()
                 filtered = filter.run(result)
@@ -323,9 +330,9 @@ require "command_line_reporter"
 
                 run_tag = "Run " + runs.to_s
                 server_tag = "Server " + @server
-                inner_hash = { server_tag => filter.fail.to_s }
+                failstate = filter.fail.to_s
 
-                @stats[run_tag] = inner_hash			  	# Catch the fail state for stats
+                $stats[[server_tag, run_tag].join(" ")] = failstate		# Catch the fail state for stats
 
                 # store the stat info here
 
@@ -348,7 +355,9 @@ require "command_line_reporter"
            [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
 
 
-    File.write( "./reports/Output ##{@uid}-#{ time }", @stats.to_s )
+    File.write( "./reports/Output ##{@uid}-#{ time }", $stats.to_s )
+
+    p $stats.to_s
 
     end
 
