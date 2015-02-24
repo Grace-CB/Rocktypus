@@ -20,8 +20,6 @@ require "command_line_reporter"
     $logger
   end
 
-  @@fail = ""
-
   $stats = {}
 
   class Cups
@@ -96,7 +94,7 @@ require "command_line_reporter"
      end
 
 
-      if (@errorlevel.to_s == '2') 
+      if (@errorlevel.to_s == '2')
          $logger.level = Logger::WARN
       elsif (@errorlevel.to_s == '1')
          $logger.level = Logger::ERROR
@@ -127,10 +125,10 @@ require "command_line_reporter"
 
     include CommandLineReporter
 
-    attr_accessor :fail
+    attr_accessor :test_state
 
     @lines = ''
-    @@fail = "success"
+    $test_state = "success"
 
       def rj(digit)					# sub for right justifying with zeros on date numbers
         return digit.to_s.rjust(2, "0")
@@ -173,7 +171,7 @@ require "command_line_reporter"
         previous = ''
         error = false
 
-        @@fail = "success"
+        $test_state = "success"
 
         result.each_line { |line|
 
@@ -188,17 +186,17 @@ require "command_line_reporter"
           processed.push(line)
           info("Caught because error flagging.")
         elsif (
-         line.match(/^\W{4}\w/) and 
+         line.match(/^\W{4}\w/) and
          previous.match(/^\W{6}\w/) )  		# If we're at the start of an error, start recording and catch the line before.
           error = false
           processed.push(previous)
           processed.push(line)
           info("Caught an ending line and previous.")
         elsif (
-         line.match(/^\W{6}\w/) and 
+         line.match(/^\W{6}\w/) and
          previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
           error = true
-          @@fail = "failure"
+          $test_state = "failure"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
@@ -312,13 +310,13 @@ require "command_line_reporter"
                          [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
 
                 # Pack up the vars into the executable string
-                execstring = '/usr/local/bin/gless ' + 
-                             test + " " + server + " GE_BROWSER=" + 
+                execstring = '/usr/local/bin/gless ' +
+                             test + " " + server + " GE_BROWSER=" +
                              browser + ' GE_PLATFORM="' + platform + '"' + " GE_BROWSER_VERSION=" + version
                 puts execstring
                 result = %x( #{ execstring } 2>&1 )
 
-		info( "Finished the executions." )
+                info( "Finished the executions." )
 
                 File.write( "./raw/Output ##{@uid}-#{ time }", result) 		# Drop the raw output into a file
                 result = result.gsub(/\e\[\d{1,2}m/, '')                       	# Strip formatting
