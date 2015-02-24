@@ -1,0 +1,34 @@
+
+
+
+Your current directory doesn't look right; putting you in /var/local/deploy/gless ; if that's not what you wanted, you want to clone qa-automation, and be in the gless dir.
+
+
+
+  0 2015.02.24-00:54:25 1424768065 /var/local/deploy/gless/features/support/server_data.rb:7: warning: already initialized constant CytobankUtil::ServerData::DefaultRolesFilepath
+  0 2015.02.24-00:54:25 1424768065 /var/local/deploy/gless/features/support/server_data.rb:7: warning: previous definition of DefaultRolesFilepath was here
+  0 2015.02.24-00:54:25 1424768065 [36m@utility[0m
+  0 2015.02.24-00:54:25 1424768065 Feature: Utility Scenarios
+  0 2015.02.24-00:54:25 1424768065
+  0 2015.02.24-00:54:25 1424768065   [36m@very_tiny_perf_test[0m
+  0 2015.02.24-00:54:25 1424768065   Scenario: Run Very Basic Cytoweb Performance Test[90m                    # features/cytobank/utility.feature:19[0m
+ 12 2015.02.24-00:54:37 1424768077     [32mGiven I have configuration data for the requested server[90m           # features/support/step_definitions/cytobank_steps.rb:3[0m[0m
+  1 2015.02.24-00:54:38 1424768078     [32mAnd I have the experiment data for '[32m[1mu937[0m[0m[32m'[90m                          # features/support/step_definitions/experiment_steps/login.rb:1[0m[0m
+  4 2015.02.24-00:54:42 1424768082     [32mAnd I start the test framework[90m                                     # features/support/step_definitions/cytobank_steps.rb:8[0m[0m
+  4 2015.02.24-00:54:46 1424768086     [32mWhen I select my login server[90m                                      # features/support/step_definitions/cytobank_steps.rb:26[0m[0m
+ 25 2015.02.24-00:55:11 1424768111     [32mAnd I log in[90m                                                       # features/support/step_definitions/cytobank_steps.rb:30[0m[0m
+  0 2015.02.24-00:55:11 1424768111     [32mThen I am on the experiments page[90m                                  # features/support/step_definitions/experiment_steps/login.rb:45[0m[0m
+ 44 2015.02.24-00:55:55 1424768155     [32mGiven I have enough credits[90m                                        # features/support/step_definitions/experiment_steps/check_credits.rb:1[0m[0m
+ 35 2015.02.24-00:56:30 1424768190     [32mAnd I open the experiment[90m                                          # features/support/step_definitions/experiment_steps/open_experiment.rb:1[0m[0m
+  3 2015.02.24-00:56:33 1424768193     [32mWhen I clone the experiment[90m                                        # features/support/step_definitions/experiment_steps/open_experiment.rb:9[0m[0m
+  7 2015.02.24-00:56:40 1424768200     [32mThen I am certain that the experiment got cloned[90m                   # features/support/step_definitions/experiment_steps/open_experiment.rb:13[0m[0m
+ 10 2015.02.24-00:56:50 1424768210     [32mGiven I open the edit experiment form[90m                              # features/support/step_definitions/experiment_steps/open_experiment.rb:38[0m[0m
+ 15 2015.02.24-00:57:05 1424768225     [32mWhen I change the experiment name to start with "[32m[1mPerformance Test[0m[0m[32m"[90m # features/support/step_definitions/experiment_steps/open_experiment.rb:42[0m[0m
+ 25 2015.02.24-00:57:30 1424768250     [32mThen The experiment name begins with "[32m[1mPerformance Test[0m[0m[32m"[90m            # features/support/step_definitions/experiment_steps/open_experiment.rb:47[0m[0m
+ 15 2015.02.24-00:57:45 1424768265     [32mWhen I delete the experiment[90m                                       # features/support/step_definitions/perf_steps/delete_experiment.rb:1[0m[0m
+  0 2015.02.24-00:57:45 1424768265     [32mThen I am on the experiments page[90m                                  # features/support/step_definitions/experiment_steps/login.rb:45[0m[0m
+ 10 2015.02.24-00:57:55 1424768275     [32mThen I sign out[90m                                                    # features/support/step_definitions/experiment_steps/logout.rb:1[0m[0m
+  0 2015.02.24-00:57:55 1424768275
+  0 2015.02.24-00:57:55 1424768275 1 scenario ([32m1 passed[0m)
+  0 2015.02.24-00:57:55 1424768275 16 steps ([32m16 passed[0m)
+  0 2015.02.24-00:57:55 1424768275 3m29.362s

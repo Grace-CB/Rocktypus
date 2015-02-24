@@ -328,7 +328,7 @@ require "command_line_reporter"
 
                 run_tag = "Run " + runs.to_s
                 server_tag = "Server " + @server
-                failstate = filter.fail.to_s
+                failstate = filter.test_state
 
                 $stats[[server_tag, run_tag].join(" ")] = failstate		# Catch the fail state for stats
 
