@@ -182,6 +182,10 @@ require "command_line_reporter"
           next
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
           info("Skipping #{ line }.")
+        elsif (line.match(/^W, /))
+          # (do stuff because it's a warning)
+          line = line.gsub(/^[^\:]:\W{1}/, '')
+          info("Caught and stripped bare a warning line.")
         elsif (error)             		# If there's an error, catch the lines in the diff.
           processed.push(line)
           info("Caught because error flagging.")

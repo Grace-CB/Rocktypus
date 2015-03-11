@@ -1,0 +1,8 @@
+
+
+
+Your current directory doesn't look right; putting you in /var/local/deploy/gless ; if that's not what you wanted, you want to clone qa-automation, and be in the gless dir.
+
+
+
+Second argument needs to be a server, which means letters, numbers, underscores, and dashes.
