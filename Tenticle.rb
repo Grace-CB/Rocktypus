@@ -1,7 +1,7 @@
 module Tenticle
 
 require "highline/import"
-#require "trollop"
+require "trollop"
 require "logger"
 require "command_line_reporter"
 
