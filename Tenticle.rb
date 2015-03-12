@@ -1,7 +1,7 @@
 module Tenticle
 
 require "highline/import"
-require "trollop"
+#require "trollop"
 require "logger"
 require "command_line_reporter"
 
@@ -13,16 +13,52 @@ require "command_line_reporter"
   #  (B)rowser flavor
   # b(R)owser version
 
-  $logger = Logger.new(STDOUT)									# New logger at the module level
-  $logger.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
+  module Help
 
-  def self.log
-    $logger
+    class << self
+
+      attr_accessor :stats, :log
+
+    end
+
+    self.stats = {}
+
+    self.log = Logger.new(STDOUT)									# New logger at the module level
+    log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
+
+    def self.rj(digit)
+      return digit.to_s.rjust(2, "0")
+    end
+
+    def self.err(message)
+
+      logger.error(message)
+
+    end
+
+    def self.warn(message)
+
+      logger.warn(message)
+
+    end
+
+    def self.info(message)
+
+      logger.info(message)
+
+    end
+
+    def self.fatal
+
+      logger.fatal( "FATAL: " + message + " EXITING.")
+
+    end
+
   end
 
-  $stats = {}
-
   class Cups
+
+    require 'Help'
 
     attr_accessor :file, :times, :servers, :tests, :platforms, :browsers, :versions
 
@@ -40,13 +76,6 @@ require "command_line_reporter"
     def initialize (args)
 
       # These define the basic configuration. They're altered by command line options.
-
-#      @tests = ['test1', 'test2', 'test3']
-#      @servers = ['avanboxel', 'qa-eris']
-#      @options = {}
-#      @file = ''
-#      @errorlevel = 0                                                       # Fatals
-#      @times = 3                                                           # By default, if you don't specify repetitions, there's just three.
 
       @options = Trollop::options do
         opt :file, "Filename", :type => :string, :default => 'cfg.yml'      			         # Default config is 'cfg.yml'
@@ -69,46 +98,22 @@ require "command_line_reporter"
       @browsers = @options[:browsers]
       @versions = @options[:version]
 
-     def self.err(message)
-
-       $logger.error(message)
-
-     end
-
-     def self.warn(message)
-
-       $logger.warn(message)
-
-     end
-
-     def self.info(message)
-
-       $logger.info(message)
-
-     end
-
-     def self.fatal
-
-       $logger.fatal( "FATAL: " + message + " EXITING.")
-
-     end
-
 
       if (@errorlevel.to_s == '2')
-         $logger.level = Logger::WARN
+         Help.log.level = Logger::WARN
       elsif (@errorlevel.to_s == '1')
-         $logger.level = Logger::ERROR
+         Help.log.level = Logger::ERROR
       elsif (@errorlevel.to_s == '0')
-         $logger.level = Logger::FATAL
+         Help.log.level = Logger::FATAL
       elsif (@errorlevel == NIL)
-         $logger.level = Logger::FATAL
+         Help.log.level = Logger::FATAL
       else
-         $logger.level = Logger::FATAL
-         $logger.fatal("Unknown error level setting attempted. Exiting.")
+         Help.log.level = Logger::FATAL
+         Help.log.fatal("Unknown error level setting attempted. Exiting.")
       end
 
-      $logger.info("@errorlevel was set to #{ @errorlevel }")
-      $logger.info("logger level was set to #{ $logger.level }")
+      Help.log.info("@errorlevel was set to #{ @errorlevel }")
+      Help.log.info("logger level was set to #{ $logger.level }")
 
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
@@ -123,40 +128,14 @@ require "command_line_reporter"
 
   class Cuisinart
 
+    require 'Help'
+
     include CommandLineReporter
 
     attr_accessor :test_state
 
     @lines = ''
-    $test_state = "success"
-
-      def rj(digit)					# sub for right justifying with zeros on date numbers
-        return digit.to_s.rjust(2, "0")
-      end
-
-      def err(message)
-
-        $logger.error(message)
-
-      end
-
-      def warn(message)
-
-        $logger.warn(message)
-
-      end
-
-      def info(message)
-
-        $logger.info(message)
-
-      end
-
-      def fatal
-
-        $logger.fatal( "FATAL: " + message + " EXITING.")
-
-      end
+    test_state = "success"
 
       def initialize()
         self.formatter = 'progress'
@@ -236,11 +215,9 @@ require "command_line_reporter"
 
   class Hopper
 
-    attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions, :stats
+    require 'Help'
 
-    def rj(digit)
-      return digit.to_s.rjust(2, "0")
-    end
+    attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions, :stats
 
     def initialize (options)          # A six-item hash with an integer (iteration count) and then five arrays
                                       # -- servers, tests, browsers, platforms, versions
@@ -255,30 +232,6 @@ require "command_line_reporter"
 
 
       # create a timestamped directory for this batch of tests
-
-    end
-
-    def err(message)
-
-      $logger.error(message)
-
-    end
-
-    def warn(message)
-
-      $logger.warn(message)
-
-    end
-
-    def info(message)
-
-      $logger.info(message)
-
-    end
-
-    def self.fatal
-
-      $logger.fatal( "FATAL: " + message + " EXITING.")
 
     end
 
@@ -320,7 +273,7 @@ require "command_line_reporter"
                 puts execstring
                 result = %x( #{ execstring } 2>&1 )
 
-                info( "Finished the executions." )
+                Help.loginfo( "Finished the executions." )
 
                 File.write( "./raw/Output ##{@uid}-#{ time }", result) 		# Drop the raw output into a file
                 result = result.gsub(/\e\[\d{1,2}m/, '')                       	# Strip formatting
@@ -334,7 +287,7 @@ require "command_line_reporter"
                 server_tag = "Server " + @server
                 failstate = filter.test_state
 
-                $stats[[server_tag, run_tag].join(" ")] = failstate		# Catch the fail state for stats
+                Help.stats[[server_tag, run_tag].join(" ")] = failstate		# Catch the fail state for stats
 
                 # store the stat info here
 
@@ -359,10 +312,10 @@ require "command_line_reporter"
 
     File.write( "./reports/Output ##{@uid}-#{ time }", $stats.to_s )
 
-    p $stats.to_s
+    p Help.stats.to_s
 
     end
 
   end
 
-  end
+end
