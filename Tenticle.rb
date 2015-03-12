@@ -1,7 +1,7 @@
 module Tenticle
 
 require "highline/import"
-#require "trollop"
+require "trollop"
 require "logger"
 require "command_line_reporter"
 
@@ -32,25 +32,25 @@ require "command_line_reporter"
 
     def self.err(message)
 
-      logger.error(message)
+      log.error(message)
 
     end
 
     def self.warn(message)
 
-      logger.warn(message)
+      log.warn(message)
 
     end
 
     def self.info(message)
 
-      logger.info(message)
+      log.info(message)
 
     end
 
-    def self.fatal
+    def self.fatal(message)
 
-      logger.fatal( "FATAL: " + message + " EXITING.")
+      log.fatal( "FATAL: " + message + " EXITING.")
 
     end
 
@@ -58,7 +58,7 @@ require "command_line_reporter"
 
   class Cups
 
-    require 'Help'
+    include Help
 
     attr_accessor :file, :times, :servers, :tests, :platforms, :browsers, :versions
 
@@ -113,7 +113,7 @@ require "command_line_reporter"
       end
 
       Help.log.info("@errorlevel was set to #{ @errorlevel }")
-      Help.log.info("logger level was set to #{ $logger.level }")
+      Help.log.info("logger level was set to #{ Help.log.level }")
 
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
@@ -128,7 +128,7 @@ require "command_line_reporter"
 
   class Cuisinart
 
-    require 'Help'
+    include Help
 
     include CommandLineReporter
 
@@ -160,21 +160,21 @@ require "command_line_reporter"
         if (index <= 9)				# Ignore the first nine lines.
           next
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
-          info("Skipping #{ line }.")
+          Help.log.info("Skipping #{ line }.")
         elsif (line.match(/^W, /))
           # (do stuff because it's a warning)
           line = line.gsub(/^[^\:]:\W{1}/, '')
-          info("Caught and stripped bare a warning line.")
+          Help.log.info("Caught and stripped bare a warning line.")
         elsif (error)             		# If there's an error, catch the lines in the diff.
           processed.push(line)
-          info("Caught because error flagging.")
+          Help.log.info("Caught because error flagging.")
         elsif (
          line.match(/^\W{4}\w/) and
          previous.match(/^\W{6}\w/) )  		# If we're at the start of an error, start recording and catch the line before.
           error = false
           processed.push(previous)
           processed.push(line)
-          info("Caught an ending line and previous.")
+          Help.log.info("Caught an ending line and previous.")
         elsif (
          line.match(/^\W{6}\w/) and
          previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
@@ -183,13 +183,13 @@ require "command_line_reporter"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
-          info("Caught a beginning line.")
+          Help.log.info("Caught a beginning line.")
         elsif (line.match(/^\W{6}\w/))          # Catch any lines that happen to be indented enough to be error or diff.
           processed.push(line)
-          info("Catching an error because of indentation.")
+          Help.log.info("Catching an error because of indentation.")
         elsif (line.match(/^\w/))           	# Catch any lines that haven't got any indentation.
           processed.push(line)
-          info("Catching a line because of lack of indentation.")
+          Help.log.info("Catching a line because of lack of indentation.")
         end
 
         previous = line				# Next line. Store the last one.
@@ -201,7 +201,7 @@ require "command_line_reporter"
       puts processed
 
       t = Time.new
-      time = [ [ rj(t.day), rj(t.mon), t.year ].join("-"), [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
+      time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"), [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
 
       puts "Processed at: #{ time }"
 
@@ -215,7 +215,7 @@ require "command_line_reporter"
 
   class Hopper
 
-    require 'Help'
+    include Help
 
     attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions, :stats
 
@@ -263,8 +263,8 @@ require "command_line_reporter"
                 while runs < @count
 
                 t = Time.new                                          	        # New timestamp for each run
-                time = [ [ rj(t.day), rj(t.mon), t.year ].join("-"),			# Format for the report
-                         [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
+                time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),			# Format for the report
+                         [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
 
                 # Pack up the vars into the executable string
                 execstring = '/usr/local/bin/gless ' +
@@ -273,7 +273,7 @@ require "command_line_reporter"
                 puts execstring
                 result = %x( #{ execstring } 2>&1 )
 
-                Help.loginfo( "Finished the executions." )
+                Help.log.info( "Finished the executions." )
 
                 File.write( "./raw/Output ##{@uid}-#{ time }", result) 		# Drop the raw output into a file
                 result = result.gsub(/\e\[\d{1,2}m/, '')                       	# Strip formatting
@@ -306,8 +306,8 @@ require "command_line_reporter"
     }
 
     t = Time.new                                                    # New timestamp for each run
-    time = [ [ rj(t.day), rj(t.mon), t.year ].join("-"),                    # Format for the report
-           [ rj(t.hour), rj(t.min), rj(t.sec) ].join("=") ].join(" ")
+    time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),                    # Format for the report
+           [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
 
 
     File.write( "./reports/Output ##{@uid}-#{ time }", $stats.to_s )
