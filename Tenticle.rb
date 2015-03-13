@@ -217,7 +217,7 @@ require "command_line_reporter"
 
     include Help
 
-    attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions, :stats
+    attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions
 
     def initialize (options)          # A six-item hash with an integer (iteration count) and then five arrays
                                       # -- servers, tests, browsers, platforms, versions
@@ -285,7 +285,6 @@ require "command_line_reporter"
 
                 run_tag = "Run " + runs.to_s
                 server_tag = "Server " + @server
-                failstate = filter.test_state
 
                 Help.stats[[server_tag, run_tag].join(" ")] = failstate		# Catch the fail state for stats
 
