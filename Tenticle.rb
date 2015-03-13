@@ -132,13 +132,16 @@ require "command_line_reporter"
 
     include CommandLineReporter
 
+    @lines = ''
+
     attr_accessor :test_state
 
-    @lines = ''
-    test_state = "success"
+    @test_state = ""
 
       def initialize()
+
         self.formatter = 'progress'
+
       end
 
       def run(result)
@@ -150,7 +153,7 @@ require "command_line_reporter"
         previous = ''
         error = false
 
-        $test_state = "success"
+        @test_state = "success"
 
         result.each_line { |line|
 
@@ -179,7 +182,7 @@ require "command_line_reporter"
          line.match(/^\W{6}\w/) and
          previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
           error = true
-          $test_state = "failure"
+          @test_state = "failure"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
@@ -286,7 +289,7 @@ require "command_line_reporter"
                 run_tag = "Run " + runs.to_s
                 server_tag = "Server " + @server
 
-                Help.stats[[server_tag, run_tag].join(" ")] = failstate		# Catch the fail state for stats
+                Help.stats[[server_tag, run_tag].join(" ")] = filter.test_state		# Catch the fail state for stats
 
                 # store the stat info here
 
