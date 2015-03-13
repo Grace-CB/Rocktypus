@@ -23,8 +23,19 @@ require "command_line_reporter"
 
     self.stats = {}
 
-    self.log = Logger.new(STDOUT)									# New logger at the module level
+    self.log = Logger.new(STDOUT)                                             # New logger at the module level
     log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
+
+    def self.stamp
+
+      t = Time.new
+      stamp = [
+        [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),
+        [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=")
+      ].join(" ")
+      return stamp
+
+    end
 
     def self.rj(digit)
       return digit.to_s.rjust(2, "0")
@@ -203,10 +214,11 @@ require "command_line_reporter"
       puts "Processed is: "
       puts processed
 
-      t = Time.new
-      time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"), [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
+      # t = Time.new
+      # time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"), [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
+      # replaced by Help.stamp
 
-      puts "Processed at: #{ time }"
+      puts "Processed at: #{ Help.stamp }"
 
       report = processed.join("")
 
@@ -240,6 +252,8 @@ require "command_line_reporter"
 
     def empty
 
+      # Empties out the Hopper after it's loaded with gless run infos.
+
       @uid = %x( ruby uid.rb )
       @uid = @uid.chomp
 
@@ -265,9 +279,11 @@ require "command_line_reporter"
 
                 while runs < @count
 
-                t = Time.new                                          	        # New timestamp for each run
-                time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),			# Format for the report
-                         [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
+                # t = Time.new                                          	               # New timestamp for each run
+                # time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),			   # Format for the report
+                #        [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
+                # replaced by Help.stamp
+
 
                 # Pack up the vars into the executable string
                 execstring = '/usr/local/bin/gless ' +
@@ -278,20 +294,18 @@ require "command_line_reporter"
 
                 Help.log.info( "Finished the executions." )
 
-                File.write( "./raw/Output ##{@uid}-#{ time }", result) 		# Drop the raw output into a file
-                result = result.gsub(/\e\[\d{1,2}m/, '')                       	# Strip formatting
+                File.write( "./raw/Output ##{@uid}-#{ time }", result) 		             # Drop the raw output into a file
+                result = result.gsub(/\e\[\d{1,2}m/, '')                       	       # Strip formatting
 
                 filter = Cuisinart.new()
                 filtered = filter.run(result)
 
-                File.write( "./filtered/Output ##{@uid}-#{ time }", filtered)  	# Drop the filtered into a file
+                File.write( "./filtered/Output ##{@uid}-#{ Help.stamp }", filtered)  	       # Drop the filtered into a file
 
                 run_tag = "Run " + runs.to_s
                 server_tag = "Server " + @server
 
-                Help.stats[[server_tag, run_tag].join(" ")] = filter.test_state		# Catch the fail state for stats
-
-                # store the stat info here
+                Help.stats[[server_tag, run_tag].join(" ")] = filter.test_state		     # Catch the fail state for stats
 
                 runs = runs + 1
 
