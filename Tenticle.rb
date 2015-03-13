@@ -294,7 +294,7 @@ require "command_line_reporter"
 
                 Help.log.info( "Finished the executions." )
 
-                File.write( "./raw/Output ##{@uid}-#{ time }", result) 		             # Drop the raw output into a file
+                File.write( "./raw/Output ##{@uid}-#{ Help.stamp }", result) 		             # Drop the raw output into a file
                 result = result.gsub(/\e\[\d{1,2}m/, '')                       	       # Strip formatting
 
                 filter = Cuisinart.new()
