@@ -32,25 +32,25 @@ require "command_line_reporter"
 
     def self.err(message)
 
-      logger.error(message)
+      log.error(message)
 
     end
 
     def self.warn(message)
 
-      logger.warn(message)
+      log.warn(message)
 
     end
 
     def self.info(message)
 
-      logger.info(message)
+      log.info(message)
 
     end
 
-    def self.fatal
+    def self.fatal(message)
 
-      logger.fatal( "FATAL: " + message + " EXITING.")
+      log.fatal( "FATAL: " + message + " EXITING.")
 
     end
 
