@@ -17,7 +17,7 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log
+      attr_accessor :stats, :log, :debug
 
     end
 
@@ -36,6 +36,8 @@ require "command_line_reporter"
       return stamp
 
     end
+
+    self.debug = "0"                                                                            # By default, not debugging
 
     def self.rj(digit)
       return digit.to_s.rjust(2, "0")
@@ -235,7 +237,7 @@ require "command_line_reporter"
     attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions
 
     def initialize (options)          # A six-item hash with an integer (iteration count) and then five arrays
-                                      # -- servers, tests, browsers, platforms, versions
+                                      # -- servers, tests, browsers, platforms, versions. TODO Refactor later!
       @o = options
 
       @count        = @o[:count]
@@ -247,6 +249,25 @@ require "command_line_reporter"
 
 
       # create a timestamped directory for this batch of tests
+
+      if (Help.debug == 1)
+
+        # This is where we shoehorn in caching of a sort.
+        # In this case, it'll be three steps.
+
+        # TODO One -- adding a debug option to the command line.
+
+        # TODO Two -- in here, when we're in debug, we wipe out all the info
+        # coming in and replace it with standardized info from the last
+        # test batch.
+
+        # TODO Three -- add a conditional around the actual system call so
+        # we can skip it when we're running cached and instead pull in
+        # one of the batched test results.
+
+        # Everything else should work as is.
+
+      end
 
     end
 
@@ -275,7 +296,7 @@ require "command_line_reporter"
 
               @versions.each { |version|
 
-                runs = 0
+		runs = 0
 
                 while runs < @count
 
@@ -321,12 +342,8 @@ require "command_line_reporter"
 
     }
 
-    t = Time.new                                                    # New timestamp for each run
-    time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),                    # Format for the report
-           [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
 
-
-    File.write( "./reports/Output ##{@uid}-#{ time }", $stats.to_s )
+    File.write( "./reports/Output ##{@uid}-#{ Help.time }", $stats.to_s )
 
     p Help.stats.to_s
 

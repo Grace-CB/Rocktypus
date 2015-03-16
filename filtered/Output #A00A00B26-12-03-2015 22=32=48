@@ -1,0 +1,16 @@
+Feature: Cytobank Experiments
+ >>>> FAILED AT <<<<     Given I go to the working illustration                                       # features/support/step_definitions/experiment_steps.rb:3
+      Session: change_pages: attempt to change pages to IllustrationPage timed out after 600 seconds, more or less.  If the clicked element exists, are the validators for [Cytobank::IllustrationPage] correct?  Here are the exceptions from each page we tried: ---
+      Cytobank::IllustrationPage: '#<Watir::Wait::TimeoutError: timed out after 5 seconds,
+        waiting for {:text=>"Export Events", :tag_name=>"a"} to become present>'
+       (RSpec::Expectations::ExpectationNotMetError)
+      ./lib/cytobank.rb:176:in `goto_working_illustration'
+      ./features/support/step_definitions/experiment_steps.rb:4:in `/^I go to the working illustration$/'
+      features/cytobank/experiment.feature:32:in `Given I go to the working illustration'
+
+Failing Scenarios:
+cucumber features/cytobank/experiment.feature:5 # Scenario: Run The u937 Experiment
+
+1 scenario (1 failed)
+74 steps (1 failed, 56 skipped, 17 passed)
+17m12.485s

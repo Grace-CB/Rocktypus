@@ -1,0 +1,14 @@
+Feature: Cytobank Experiments
+ >>>> FAILED AT <<<<     And I start the test framework                                               # features/support/step_definitions/cytobank_steps.rb:8
+      timed out after 5 seconds, waiting for {:href=>"/cytobank/signup", :tag_name=>"a"} to become present (Watir::Wait::TimeoutError)
+      ./lib/cytobank.rb:31:in `initialize'
+      ./features/support/step_definitions/cytobank_steps.rb:13:in `new'
+      ./features/support/step_definitions/cytobank_steps.rb:13:in `/^I start the test framework$/'
+      features/cytobank/experiment.feature:9:in `And I start the test framework'
+
+Failing Scenarios:
+cucumber features/cytobank/experiment.feature:5 # Scenario: Run The u937 Experiment
+
+1 scenario (1 failed)
+74 steps (1 failed, 71 skipped, 2 passed)
+1m34.008s
