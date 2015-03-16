@@ -91,6 +91,7 @@ require "command_line_reporter"
       # These define the basic configuration. They're altered by command line options.
 
       @options = Trollop::options do
+        opt :debug, "Debug", :type => :integer, :default => '0'
         opt :file, "Filename", :type => :string, :default => 'cfg.yml'      			         # Default config is 'cfg.yml'
         opt :iterations, "Iterations", :type => :integer, :default => 3     			         # Default number of iterations is 3
         opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-charon'] 	 	 # Defaults to qa-eris
@@ -110,6 +111,7 @@ require "command_line_reporter"
       @platforms = @options[:platform]
       @browsers = @options[:browsers]
       @versions = @options[:version]
+      Help.debug = @options[:debug]
 
 
       if (@errorlevel.to_s == '2')
@@ -174,38 +176,55 @@ require "command_line_reporter"
         index = index + 1
 
         if (index <= 9)				# Ignore the first nine lines.
+
           next
+
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
+
           Help.log.info("Skipping #{ line }.")
+
         elsif (line.match(/^W, /))
+
           # (do stuff because it's a warning)
           line = line.gsub(/^[^\:]:\W{1}/, '')
           Help.log.info("Caught and stripped bare a warning line.")
+
         elsif (error)             		# If there's an error, catch the lines in the diff.
+
           processed.push(line)
           Help.log.info("Caught because error flagging.")
+
         elsif (
          line.match(/^\W{4}\w/) and
          previous.match(/^\W{6}\w/) )  		# If we're at the start of an error, start recording and catch the line before.
+
           error = false
           processed.push(previous)
           processed.push(line)
           Help.log.info("Caught an ending line and previous.")
+
         elsif (
+
          line.match(/^\W{6}\w/) and
          previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
+
           error = true
           @test_state = "failure"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
           Help.log.info("Caught a beginning line.")
+
         elsif (line.match(/^\W{6}\w/))          # Catch any lines that happen to be indented enough to be error or diff.
+
           processed.push(line)
           Help.log.info("Catching an error because of indentation.")
+
         elsif (line.match(/^\w/))           	# Catch any lines that haven't got any indentation.
+
           processed.push(line)
           Help.log.info("Catching a line because of lack of indentation.")
+
         end
 
         previous = line				# Next line. Store the last one.
@@ -251,6 +270,34 @@ require "command_line_reporter"
       # create a timestamped directory for this batch of tests
 
       if (Help.debug == 1)
+
+        # MINI ROADMAP
+
+        # 1. Finish result caching.
+        # 2. Finish report generation.
+        # 3. Finish stats generation.
+        # 4. First release! Request for feedback.
+        # 5. TBD (or "The Future")        
+
+        # This is where we'll batch the files from a specific test run
+        # so that we can stop running tests every time we need to 
+        # test the function of this testing harness test test test. Test!
+
+        # Okay, seriously: We're going to batch a specific test run's
+        # result files in order to avoid running Selenium tests (which
+        # cost money and therefore need to be avoided when possible).
+
+        # We also have to swap in that specific test's option info
+        # so that the number of tests being run and the stats info will
+        # match up.
+
+        # once this is done, we can move back to shaping report and stat
+        # functionality, hopefully with real-time groovy outputs showing
+        # fails and successes so far.
+
+        # From THERE, we move to some intensive testing of basic u937
+        # to determine the most common sort of errors and make it so the
+        # report results can actually save human processing overhead.
 
         # This is where we shoehorn in caching of a sort.
         # In this case, it'll be three steps.
@@ -311,7 +358,17 @@ require "command_line_reporter"
                              test + " " + server + " GE_BROWSER=" +
                              browser + ' GE_PLATFORM="' + platform + '"' + " GE_BROWSER_VERSION=" + version
                 puts execstring
-                result = %x( #{ execstring } 2>&1 )
+
+                if (debug == 0)
+
+                  result = %x( #{ execstring } 2>&1 )
+
+                elsif (debug == 1)
+
+                  # pick the file out of the list
+                  # set results to the file's contents
+
+                end
 
                 Help.log.info( "Finished the executions." )
 
