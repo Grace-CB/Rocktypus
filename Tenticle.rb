@@ -17,7 +17,7 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug
+      attr_accessor :stats, :log, :debug, :cache
 
     end
 
@@ -37,7 +37,8 @@ require "command_line_reporter"
 
     end
 
-    self.debug = "0"                                                                            # By default, not debugging
+    self.debug = "1"                                                                            # By default, not debugging
+    self.cache = []										# By default, empty cache
 
     def self.rj(digit)
       return digit.to_s.rjust(2, "0")
@@ -91,7 +92,7 @@ require "command_line_reporter"
       # These define the basic configuration. They're altered by command line options.
 
       @options = Trollop::options do
-        opt :debug, "Debug", :type => :integer, :default => '0'
+        opt :debug, "Debug", :type => :integer, :default => 0
         opt :file, "Filename", :type => :string, :default => 'cfg.yml'      			         # Default config is 'cfg.yml'
         opt :iterations, "Iterations", :type => :integer, :default => 3     			         # Default number of iterations is 3
         opt :servers, "Servers", :type => :strings, :default => ['qa-eris', 'qa-charon'] 	 	 # Defaults to qa-eris
@@ -266,7 +267,6 @@ require "command_line_reporter"
       @platforms    = @o[:platforms]
       @versions     = @o[:versions]
 
-
       # create a timestamped directory for this batch of tests
 
       if (Help.debug == 1)
@@ -278,6 +278,25 @@ require "command_line_reporter"
         # 3. Finish stats generation.
         # 4. First release! Request for feedback.
         # 5. TBD (or "The Future")        
+
+        @count = 2
+        @servers = ["qa02", "qa03"]
+        @tests = ["u937", "very_tiny_perf_test"]
+        @browsers = ["firefox"]
+        @platforms = ["Windows 8"]
+        @versions = ["33"]
+
+        # THIS IS OUR CACHED CONFIG. THERE ARE MANY LIKE IT. THIS IS OURS.
+
+        Help.cache = Dir["./raw/*A00A00B30*"]
+
+        p Help.cache
+
+        # Next, we manually get a copy of each of the files that have
+        # the tag A00A00B30 and queue them up in Help.cache.
+
+        # Each time we need a file, we'll pop the next one from
+        # Help.cache
 
         # This is where we'll batch the files from a specific test run
         # so that we can stop running tests every time we need to 
@@ -359,21 +378,30 @@ require "command_line_reporter"
                              browser + ' GE_PLATFORM="' + platform + '"' + " GE_BROWSER_VERSION=" + version
                 puts execstring
 
-                if (debug == 0)
+                if (Help.debug == 0)
 
                   result = %x( #{ execstring } 2>&1 )
 
-                elsif (debug == 1)
+                elsif ((Help.debug == 1) && (Help.cache.length > 0 ))
 
-                  # pick the file out of the list
-                  # set results to the file's contents
+                  result = File.read(Help.cache.shift)
+
+                  # This works but! We need to make it so it won't
+                  # nil out on the end of the cache array.
+                  # Impressively fast development. Maybe I'm getting
+                  # better at this! ^.^
 
                 end
 
                 Help.log.info( "Finished the executions." )
 
-                File.write( "./raw/Output ##{@uid}-#{ Help.stamp }", result) 		             # Drop the raw output into a file
+
+                if (Help.debug == 0)
+                  File.write( "./raw/Output ##{@uid}-#{ Help.stamp }", result) 		             # Drop the raw output into a file
+                end
+
                 result = result.gsub(/\e\[\d{1,2}m/, '')                       	       # Strip formatting
+
 
                 filter = Cuisinart.new()
                 filtered = filter.run(result)
