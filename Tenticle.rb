@@ -17,7 +17,7 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug, :cache
+      attr_accessor :stats, :log, :debug, :cache, :uid
 
     end
 
@@ -25,6 +25,8 @@ require "command_line_reporter"
 
     self.log = Logger.new(STDOUT)                                             # New logger at the module level
     log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
+
+    self.uid = "A00A00B30"
 
     def self.stamp
 
@@ -277,7 +279,7 @@ require "command_line_reporter"
         # 2. Finish report generation.
         # 3. Finish stats generation.
         # 4. First release! Request for feedback.
-        # 5. TBD (or "The Future")        
+        # 5. TBD (or "The Future")
 
         @count = 2
         @servers = ["qa02", "qa03"]
@@ -299,7 +301,7 @@ require "command_line_reporter"
         # Help.cache
 
         # This is where we'll batch the files from a specific test run
-        # so that we can stop running tests every time we need to 
+        # so that we can stop running tests every time we need to
         # test the function of this testing harness test test test. Test!
 
         # Okay, seriously: We're going to batch a specific test run's
@@ -341,8 +343,12 @@ require "command_line_reporter"
 
       # Empties out the Hopper after it's loaded with gless run infos.
 
-      @uid = %x( ruby uid.rb )
-      @uid = @uid.chomp
+      if (Help.debug == 0)
+        @uid = %x( ruby uid.rb )
+        @uid = @uid.chomp
+      elsif (Help.debug == 1)
+        @uid = Help.uid
+      end
 
       @servers.each { |server|
 
@@ -362,7 +368,7 @@ require "command_line_reporter"
 
               @versions.each { |version|
 
-		runs = 0
+                runs = 0
 
                 while runs < @count
 
@@ -400,20 +406,18 @@ require "command_line_reporter"
                   File.write( "./raw/Output ##{@uid}-#{ Help.stamp }", result) 		             # Drop the raw output into a file
                 end
 
-                result = result.gsub(/\e\[\d{1,2}m/, '')                       	       # Strip formatting
+                unless (result.nil?)
+                  result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
+                  filter = Cuisinart.new()
+                  filtered = filter.run(result)
+                  File.write( "./filtered/Output ##{@uid}-#{ Help.stamp }", filtered)          # Drop the filtered into a file
+                  run_tag = "Run " + runs.to_s
+                  server_tag = "Server " + @server
+                  test_tag = "Test " + @test
+                  Help.stats[[server_tag, run_tag, test_tag].join(" ")] = filter.test_state        # Catch the fail state for stats
+                end
 
-
-                filter = Cuisinart.new()
-                filtered = filter.run(result)
-
-                File.write( "./filtered/Output ##{@uid}-#{ Help.stamp }", filtered)  	       # Drop the filtered into a file
-
-                run_tag = "Run " + runs.to_s
-                server_tag = "Server " + @server
-
-                Help.stats[[server_tag, run_tag].join(" ")] = filter.test_state		     # Catch the fail state for stats
-
-                runs = runs + 1
+                  runs = runs + 1
 
                 end
 
@@ -428,7 +432,7 @@ require "command_line_reporter"
     }
 
 
-    File.write( "./reports/Output ##{@uid}-#{ Help.time }", $stats.to_s )
+    File.write( "./reports/Output ##{@uid}-#{ Help.stamp }", $stats.to_s )
 
     p Help.stats.to_s
 
