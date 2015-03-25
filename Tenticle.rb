@@ -72,14 +72,42 @@ require "command_line_reporter"
 
   end
 
-  module Solver
+  class Solver
 
     # This module handles the stats for the report.
 
     # We're going to be working with the Help.stats, so we'll include that.
 
     include Help
-    require 'descriptive_statistics'
+
+    def initialize
+
+      Help.info "Loaded Solver class."
+
+    end
+
+    def solve ()
+
+      # This function does "smart" solving by analyzing results and looking
+      # for contrast items automagically.
+
+      # First, we look at the results and examine them for the top three axes of similarity
+
+      # frex, if we got:
+
+      # 3, 3, 3
+      # 7, 3, 7
+      # 8, 3, 8
+
+      # then the columns of similarity are the threes
+
+      # Second, we look for secondary columns of similaritysort on the most similar
+
+      # Third, we sort by most similar and then next most similar
+
+      # This is our output for the solve
+
+    end
 
     # We'll sort the stats arrays by fail/succ, then by server, browser string, platform, and test.
     # Then we'll do some basic math to get percentages and such.
@@ -443,11 +471,9 @@ require "command_line_reporter"
 
     }
 
+    s = Solver.new
 
-
-    File.write( "./reports/{@uid}-{ Help.stamp }", $stats.to_s )
-
-    p Help.stats
+    File.write( "./reports/{@uid}-{ Help.stamp }", s.solve )
 
     end
 
