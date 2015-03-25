@@ -21,7 +21,7 @@ require "command_line_reporter"
 
     end
 
-    self.stats = {}
+    self.stats = []
 
     self.log = Logger.new(STDOUT)                                             # New logger at the module level
     log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
@@ -69,6 +69,22 @@ require "command_line_reporter"
       log.fatal( "FATAL: " + message + " EXITING.")
 
     end
+
+  end
+
+  module Solver
+
+    # This module handles the stats for the report.
+
+    # We're going to be working with the Help.stats, so we'll include that.
+
+    include Help
+    require 'descriptive_statistics'
+
+    # We'll sort the stats arrays by fail/succ, then by server, browser string, platform, and test.
+    # Then we'll do some basic math to get percentages and such.
+
+
 
   end
 
@@ -136,7 +152,7 @@ require "command_line_reporter"
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
       # the default options we want.
-      # TODO: add this information to the helpfile that trollop does.
+      # TODO: add this information to the help dialogue that trollop does.
       #
       # MAYBE: Consider highline for a later 'interactive specification' option, though?
 
@@ -323,13 +339,13 @@ require "command_line_reporter"
         # This is where we shoehorn in caching of a sort.
         # In this case, it'll be three steps.
 
-        # TODO One -- adding a debug option to the command line.
+        # One -- adding a debug option to the command line.
 
-        # TODO Two -- in here, when we're in debug, we wipe out all the info
+        # Two -- in here, when we're in debug, we wipe out all the info
         # coming in and replace it with standardized info from the last
         # test batch.
 
-        # TODO Three -- add a conditional around the actual system call so
+        # Three -- add a conditional around the actual system call so
         # we can skip it when we're running cached and instead pull in
         # one of the batched test results.
 
@@ -368,15 +384,9 @@ require "command_line_reporter"
 
               @versions.each { |version|
 
-                runs = 0
+                runs = 1
 
-                while runs < @count
-
-                # t = Time.new                                          	               # New timestamp for each run
-                # time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),			   # Format for the report
-                #        [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
-                # replaced by Help.stamp
-
+                while runs < @count + 1
 
                 # Pack up the vars into the executable string
                 execstring = '/usr/local/bin/gless ' +
@@ -390,12 +400,8 @@ require "command_line_reporter"
 
                 elsif ((Help.debug == 1) && (Help.cache.length > 0 ))
 
+                  # Queue it into the cached gless result files.
                   result = File.read(Help.cache.shift)
-
-                  # This works but! We need to make it so it won't
-                  # nil out on the end of the cache array.
-                  # Impressively fast development. Maybe I'm getting
-                  # better at this! ^.^
 
                 end
 
@@ -407,19 +413,25 @@ require "command_line_reporter"
                 end
 
                 unless (result.nil?)
+
                   result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
                   filtered = filter.run(result)
                   File.write( "./filtered/Output ##{@uid}-#{ Help.stamp }", filtered)          # Drop the filtered into a file
-                  run_tag = "Run " + runs.to_s
-                  server_tag = "Server " + @server
-                  test_tag = "Test " + @test
-                  Help.stats[[server_tag, run_tag, test_tag].join(" ")] = filter.test_state        # Catch the fail state for stats
+                  Help.stats.push( {
+                    "Run #" => runs.to_s,
+                    "Server" => @server,
+                    "Test" => @test,
+                    "OS" => @platform,
+                    "Browser" => [@browser.capitalize, ("v." + version)].join(" "),
+                    "Fail?" => filter.test_state
+                  } )
+
                 end
 
-                  runs = runs + 1
+                runs = runs + 1
 
-                end
+              end
 
             }
 
@@ -432,9 +444,10 @@ require "command_line_reporter"
     }
 
 
-    File.write( "./reports/Output ##{@uid}-#{ Help.stamp }", $stats.to_s )
 
-    p Help.stats.to_s
+    File.write( "./reports/{@uid}-{ Help.stamp }", $stats.to_s )
+
+    p Help.stats
 
     end
 
