@@ -13,7 +13,9 @@ require "command_line_reporter"
   #  (B)rowser flavor
   # b(R)owser version
 
-  module Help
+  module Brain
+
+    # This has all our globbylike stuff
 
     class << self
 
@@ -78,7 +80,7 @@ require "command_line_reporter"
 
     # We're going to be working with the Help.stats, so we'll include that.
 
-    include Help
+    include Brain
 
     def initialize
 
@@ -118,7 +120,7 @@ require "command_line_reporter"
 
   class Cups
 
-    include Help
+    include Brain
 
     attr_accessor :file, :times, :servers, :tests, :platforms, :browsers, :versions
 
@@ -158,24 +160,24 @@ require "command_line_reporter"
       @platforms = @options[:platform]
       @browsers = @options[:browsers]
       @versions = @options[:version]
-      Help.debug = @options[:debug]
+      Brain.debug = @options[:debug]
 
 
       if (@errorlevel.to_s == '2')
-         Help.log.level = Logger::WARN
+         Brain.log.level = Logger::WARN
       elsif (@errorlevel.to_s == '1')
-         Help.log.level = Logger::ERROR
+         Brain.log.level = Logger::ERROR
       elsif (@errorlevel.to_s == '0')
-         Help.log.level = Logger::FATAL
+         Brain.log.level = Logger::FATAL
       elsif (@errorlevel == NIL)
-         Help.log.level = Logger::FATAL
+         Brain.log.level = Logger::FATAL
       else
-         Help.log.level = Logger::FATAL
-         Help.log.fatal("Unknown error level setting attempted. Exiting.")
+         Brain.log.level = Logger::FATAL
+         Brain.log.fatal("Unknown error level setting attempted. Exiting.")
       end
 
-      Help.log.info("@errorlevel was set to #{ @errorlevel }")
-      Help.log.info("logger level was set to #{ Help.log.level }")
+      Brain.log.info("@errorlevel was set to #{ @errorlevel }")
+      Brain.log.info("logger level was set to #{ Brain.log.level }")
 
       # The hierarchy here is going to be default file, then specified file,
       # then command line options if specified. That way, we can run Octy with just
@@ -190,7 +192,7 @@ require "command_line_reporter"
 
   class Cuisinart
 
-    include Help
+    include Brain
 
     include CommandLineReporter
 
@@ -228,18 +230,18 @@ require "command_line_reporter"
 
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
 
-          Help.log.info("Skipping #{ line }.")
+          Brain.log.info("Skipping #{ line }.")
 
         elsif (line.match(/^W, /))
 
           # (do stuff because it's a warning)
           line = line.gsub(/^[^\:]:\W{1}/, '')
-          Help.log.info("Caught and stripped bare a warning line.")
+          Brain.log.info("Caught and stripped bare a warning line.")
 
         elsif (error)             		# If there's an error, catch the lines in the diff.
 
           processed.push(line)
-          Help.log.info("Caught because error flagging.")
+          Brain.log.info("Caught because error flagging.")
 
         elsif (
          line.match(/^\W{4}\w/) and
@@ -248,7 +250,7 @@ require "command_line_reporter"
           error = false
           processed.push(previous)
           processed.push(line)
-          Help.log.info("Caught an ending line and previous.")
+          Brain.log.info("Caught an ending line and previous.")
 
         elsif (
 
@@ -260,17 +262,17 @@ require "command_line_reporter"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
-          Help.log.info("Caught a beginning line.")
+          Brain.log.info("Caught a beginning line.")
 
         elsif (line.match(/^\W{6}\w/))          # Catch any lines that happen to be indented enough to be error or diff.
 
           processed.push(line)
-          Help.log.info("Catching an error because of indentation.")
+          Brain.log.info("Catching an error because of indentation.")
 
         elsif (line.match(/^\w/))           	# Catch any lines that haven't got any indentation.
 
           processed.push(line)
-          Help.log.info("Catching a line because of lack of indentation.")
+          Brain.log.info("Catching a line because of lack of indentation.")
 
         end
 
@@ -278,15 +280,14 @@ require "command_line_reporter"
 
       }
 
-
       puts "Processed is: "
       puts processed
 
       # t = Time.new
-      # time = [ [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"), [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=") ].join(" ")
-      # replaced by Help.stamp
+      # time = [ [ Brain.rj(t.day), Brain.rj(t.mon), t.year ].join("-"), [ Brain.rj(t.hour), Brain.rj(t.min), Brain.rj(t.sec) ].join("=") ].join(" ")
+      # replaced by Brain.stamp
 
-      puts "Processed at: #{ Help.stamp }"
+      puts "Processed at: #{ Brain.stamp }"
 
       report = processed.join("")
 
@@ -298,7 +299,7 @@ require "command_line_reporter"
 
   class Hopper
 
-    include Help
+    include Brain
 
     attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions
 
@@ -315,7 +316,7 @@ require "command_line_reporter"
 
       # create a timestamped directory for this batch of tests
 
-      if (Help.debug == 1)
+      if (Brain.debug == 1)
 
         # MINI ROADMAP
 
@@ -334,15 +335,15 @@ require "command_line_reporter"
 
         # THIS IS OUR CACHED CONFIG. THERE ARE MANY LIKE IT. THIS IS OURS.
 
-        Help.cache = Dir["./raw/*A00A00B30*"]
+        Brain.cache = Dir["./raw/*A00A00B30*"]
 
-        p Help.cache
+        p Brain.cache
 
         # Next, we manually get a copy of each of the files that have
-        # the tag A00A00B30 and queue them up in Help.cache.
+        # the tag A00A00B30 and queue them up in Brain.cache.
 
         # Each time we need a file, we'll pop the next one from
-        # Help.cache
+        # Brain.cache
 
         # This is where we'll batch the files from a specific test run
         # so that we can stop running tests every time we need to
@@ -387,11 +388,11 @@ require "command_line_reporter"
 
       # Empties out the Hopper after it's loaded with gless run infos.
 
-      if (Help.debug == 0)
+      if (Brain.debug == 0)
         @uid = %x( ruby uid.rb )
         @uid = @uid.chomp
-      elsif (Help.debug == 1)
-        @uid = Help.uid
+      elsif (Brain.debug == 1)
+        @uid = Brain.uid
       end
 
       @servers.each { |server|
@@ -422,22 +423,22 @@ require "command_line_reporter"
                              browser + ' GE_PLATFORM="' + platform + '"' + " GE_BROWSER_VERSION=" + version
                 puts execstring
 
-                if (Help.debug == 0)
+                if (Brain.debug == 0)
 
                   result = %x( #{ execstring } 2>&1 )
 
-                elsif ((Help.debug == 1) && (Help.cache.length > 0 ))
+                elsif ((Brain.debug == 1) && (Brain.cache.length > 0 ))
 
                   # Queue it into the cached gless result files.
-                  result = File.read(Help.cache.shift)
+                  result = File.read(Brain.cache.shift)
 
                 end
 
-                Help.log.info( "Finished the executions." )
+                Brain.log.info( "Finished the executions." )
 
 
-                if (Help.debug == 0)
-                  File.write( "./raw/Output ##{@uid}-#{ Help.stamp }", result) 		             # Drop the raw output into a file
+                if (Brain.debug == 0)
+                  File.write( "./raw/Output ##{@uid}-#{ Brain.stamp }", result) 		             # Drop the raw output into a file
                 end
 
                 unless (result.nil?)
@@ -445,8 +446,8 @@ require "command_line_reporter"
                   result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
                   filtered = filter.run(result)
-                  File.write( "./filtered/Output ##{@uid}-#{ Help.stamp }", filtered)          # Drop the filtered into a file
-                  Help.stats.push( {
+                  File.write( "./filtered/Output ##{@uid}-#{ Brain.stamp }", filtered)          # Drop the filtered into a file
+                  Brain.stats.push( {
                     "Run #" => runs.to_s,
                     "Server" => @server,
                     "Test" => @test,
@@ -473,7 +474,7 @@ require "command_line_reporter"
 
     s = Solver.new
 
-    File.write( "./reports/{@uid}-{ Help.stamp }", s.solve )
+    File.write( "./reports/{@uid}-{ Brain.stamp }", s.solve )
 
     end
 
