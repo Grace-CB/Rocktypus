@@ -34,8 +34,8 @@ require "command_line_reporter"
 
       t = Time.new
       stamp = [
-        [ Help.rj(t.day), Help.rj(t.mon), t.year ].join("-"),
-        [ Help.rj(t.hour), Help.rj(t.min), Help.rj(t.sec) ].join("=")
+        [ Brain.rj(t.day), Brain.rj(t.mon), t.year ].join("-"),
+        [ Brain.rj(t.hour), Brain.rj(t.min), Brain.rj(t.sec) ].join("=")
       ].join(" ")
       return stamp
 
@@ -78,13 +78,13 @@ require "command_line_reporter"
 
     # This module handles the stats for the report.
 
-    # We're going to be working with the Help.stats, so we'll include that.
+    # We're going to be working with the Brain.stats, so we'll include that.
 
     include Brain
 
     def initialize
 
-      Help.info "Loaded Solver class."
+      Brain.info "Loaded Solver class."
 
     end
 
