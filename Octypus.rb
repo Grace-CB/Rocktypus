@@ -78,9 +78,7 @@ result = []
 # The hopper calls for the Cuisinart to filter out errything that passes and report-format everything that doesn't. We
 # still put the raw stuff in the raw file, and filtering gives us the report version.
 
-p cups
-
-hopper = Tenticle::Hopper.new( 
+hopper = Tenticle::Hopper.new(
 
   :count => cups.times,
   :servers => cups.servers,

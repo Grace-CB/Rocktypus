@@ -19,11 +19,13 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug, :cache, :uid
+      attr_accessor :stats, :log, :debug, :cache, :uid, :filelist
 
     end
 
     self.stats = []
+
+    self.filelist = []
 
     self.log = Logger.new(STDOUT)                                             # New logger at the module level
     log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
@@ -74,6 +76,7 @@ require "command_line_reporter"
 
   end
 
+
   class Solver
 
     # This module handles the stats for the report.
@@ -114,9 +117,8 @@ require "command_line_reporter"
     # We'll sort the stats arrays by fail/succ, then by server, browser string, platform, and test.
     # Then we'll do some basic math to get percentages and such.
 
-
-
   end
+
 
   class Cups
 
@@ -189,6 +191,7 @@ require "command_line_reporter"
     end
 
   end
+
 
   class Cuisinart
 
@@ -280,14 +283,14 @@ require "command_line_reporter"
 
       }
 
-      puts "Processed is: "
       puts processed
 
       # t = Time.new
       # time = [ [ Brain.rj(t.day), Brain.rj(t.mon), t.year ].join("-"), [ Brain.rj(t.hour), Brain.rj(t.min), Brain.rj(t.sec) ].join("=") ].join(" ")
       # replaced by Brain.stamp
 
-      puts "Processed at: #{ Brain.stamp }"
+      puts "Filtered at: #{ Brain.stamp }"
+      puts ""
 
       report = processed.join("")
 
@@ -296,6 +299,7 @@ require "command_line_reporter"
     end
 
   end
+
 
   class Hopper
 
@@ -336,8 +340,6 @@ require "command_line_reporter"
         # THIS IS OUR CACHED CONFIG. THERE ARE MANY LIKE IT. THIS IS OURS.
 
         Brain.cache = Dir["./raw/*A00A00B30*"]
-
-        p Brain.cache
 
         # Next, we manually get a copy of each of the files that have
         # the tag A00A00B30 and queue them up in Brain.cache.
@@ -421,7 +423,7 @@ require "command_line_reporter"
                 execstring = '/usr/local/bin/gless ' +
                              test + " " + server + " GE_BROWSER=" +
                              browser + ' GE_PLATFORM="' + platform + '"' + " GE_BROWSER_VERSION=" + version
-                puts execstring
+                Brain.info(execstring)
 
                 if (Brain.debug == 0)
 
@@ -438,7 +440,9 @@ require "command_line_reporter"
 
 
                 if (Brain.debug == 0)
-                  File.write( "./raw/Output ##{@uid}-#{ Brain.stamp }", result) 		             # Drop the raw output into a file
+                  filename = "./raw/Output #{@uid}-#{ Brain.stamp }"
+                  File.write( filename, result) 		             # Drop the raw output into a file
+                  Brain.filelist.push(filename)
                 end
 
                 unless (result.nil?)
@@ -446,7 +450,9 @@ require "command_line_reporter"
                   result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
                   filtered = filter.run(result)
-                  File.write( "./filtered/Output ##{@uid}-#{ Brain.stamp }", filtered)          # Drop the filtered into a file
+                  filename = "./filtered/Output #{@uid}-#{ Brain.stamp }"
+                  File.write( filename, filtered)          # Drop the filtered into a file
+                  Brain.filelist.push(filename)
                   Brain.stats.push( {
                     "Run #" => runs.to_s,
                     "Server" => @server,
@@ -474,7 +480,9 @@ require "command_line_reporter"
 
     s = Solver.new
 
-    File.write( "./reports/{@uid}-{ Brain.stamp }", s.solve )
+    filename = "./reports/#{@uid}-#{ Brain.stamp }"
+    File.write( filename, s.solve )
+    Brain.filelist.push(filename)
 
     end
 
