@@ -30,7 +30,7 @@ require "command_line_reporter"
     self.log = Logger.new(STDOUT)                                             # New logger at the module level
     log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
 
-    self.uid = "A00A00B30"
+    self.uid = "A00A00B38"
 
     def self.stamp
 
