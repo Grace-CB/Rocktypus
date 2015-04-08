@@ -52,7 +52,7 @@ require "command_line_reporter"
     end
 
     # debug flags for whether we're debugging or not. By default, we aren't.
-    self.debug = "1"                                                                            # By default, not debugging
+    self.debug = "0"                                                                            # By default, not debugging
     self.cache = []										# By default, empty cache
 
     def self.rj(digit)
