@@ -19,21 +19,29 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug, :cache, :uid, :filelist
+      attr_accessor :stats, :log, :debug, :cache, :uid, :filelist, :axes
 
     end
 
+    # stats is the end result from Cuisinart.
     self.stats = []
 
+    # filelist is a list of files from a previous run.
     self.filelist = []
 
+    # axes is a list of potential statistics axes
+    self.axes = []
+
+    # log is our Logger object. the formatting is set on the next line.
     self.log = Logger.new(STDOUT)                                             # New logger at the module level
     log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
 
+    # This uid is set to a new UID for a fresh run
     self.uid = "A00A00B38"
 
     def self.stamp
 
+      # stamp returns a timestamp in the necessary format
       t = Time.new
       stamp = [
         [ Brain.rj(t.day), Brain.rj(t.mon), t.year ].join("-"),
@@ -43,6 +51,7 @@ require "command_line_reporter"
 
     end
 
+    # debug flags for whether we're debugging or not. By default, we aren't.
     self.debug = "1"                                                                            # By default, not debugging
     self.cache = []										# By default, empty cache
 
@@ -89,33 +98,29 @@ require "command_line_reporter"
 
       Brain.info "Loaded Solver class."
 
+      data = Brain.stats
+      @something = []
+      @axes = [["Server"], ["Test"], ["OS"], ["Browser"]]
+
+      data.each{ |result|
+
+        @axes.each { |aspect|
+
+          @something.push [result, aspect]
+
+        }
+
+      }
+
     end
 
     def solve ()
 
-      # This function does "smart" solving by analyzing results and looking
-      # for contrast items automagically.
-
-      # First, we look at the results and examine them for the top three axes of similarity
-
-      # frex, if we got:
-
-      # 3, 3, 3
-      # 7, 3, 7
-      # 8, 3, 8
-
-      # then the columns of similarity are the threes
-
-      # Second, we look for secondary columns of similaritysort on the most similar
-
-      # Third, we sort by most similar and then next most similar
-
-      # This is our output for the solve
-
-    end
 
     # We'll sort the stats arrays by fail/succ, then by server, browser string, platform, and test.
     # Then we'll do some basic math to get percentages and such.
+
+    end
 
   end
 
@@ -163,6 +168,7 @@ require "command_line_reporter"
       @browsers = @options[:browsers]
       @versions = @options[:version]
       Brain.debug = @options[:debug]
+
 
 
       if (@errorlevel.to_s == '2')
@@ -283,14 +289,9 @@ require "command_line_reporter"
 
       }
 
-      puts processed
-
       # t = Time.new
       # time = [ [ Brain.rj(t.day), Brain.rj(t.mon), t.year ].join("-"), [ Brain.rj(t.hour), Brain.rj(t.min), Brain.rj(t.sec) ].join("=") ].join(" ")
       # replaced by Brain.stamp
-
-      puts "Filtered at: #{ Brain.stamp }"
-      puts ""
 
       report = processed.join("")
 
@@ -304,8 +305,16 @@ require "command_line_reporter"
   class Hopper
 
     include Brain
+    include CommandLineReporter
 
     attr_accessor :count, :servers, :tests, :browsers, :platforms, :versions
+
+    @count        = []
+    @servers      = []
+    @tests        = []
+    @browsers     = []
+    @platforms    = []
+    @versions     = []
 
     def initialize (options)          # A six-item hash with an integer (iteration count) and then five arrays
                                       # -- servers, tests, browsers, platforms, versions. TODO Refactor later!
@@ -339,7 +348,7 @@ require "command_line_reporter"
 
         # THIS IS OUR CACHED CONFIG. THERE ARE MANY LIKE IT. THIS IS OURS.
 
-        Brain.cache = Dir["./raw/*A00A00B30*"]
+        Brain.cache = Dir["./raw/*A00A00B38*"]
 
         # Next, we manually get a copy of each of the files that have
         # the tag A00A00B30 and queue them up in Brain.cache.
@@ -397,6 +406,30 @@ require "command_line_reporter"
         @uid = Brain.uid
       end
 
+      reportname = "./reports/#{ @uid }-#{ Brain.stamp }"
+
+      prev_std = STDOUT
+
+      $stdout = File.open(reportname, 'w')
+
+      puts ""
+
+      header(:title => 'TEST RUN RESULTS:',
+        :align => 'center',
+        :width => 80,
+        :spacing => 1
+      )
+
+      table(:border => true, :encoding => :ascii) do
+        row do
+          column 'Run #', :width => 6
+          column 'Server', :width => 12, :align => 'center'
+          column 'Test', :width => 24, :align => 'center'
+          column 'OS', :width => 14
+          column 'Browser', :width => 14
+          column 'Fail?', :width => 10
+        end
+
       @servers.each { |server|
 
         @server = server
@@ -438,7 +471,6 @@ require "command_line_reporter"
 
                 Brain.log.info( "Finished the executions." )
 
-
                 if (Brain.debug == 0)
                   filename = "./raw/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, result) 		             # Drop the raw output into a file
@@ -453,16 +485,41 @@ require "command_line_reporter"
                   filename = "./filtered/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, filtered)          # Drop the filtered into a file
                   Brain.filelist.push(filename)
-                  Brain.stats.push( {
-                    "Run #" => runs.to_s,
-                    "Server" => @server,
-                    "Test" => @test,
-                    "OS" => @platform,
-                    "Browser" => [@browser.capitalize, ("v." + version)].join(" "),
-                    "Fail?" => filter.test_state
-                  } )
+                  Brain.stats.push( [
+                    runs.to_s,
+                    @server,
+                    @test,
+                    @platform,
+                    [@browser.capitalize, ("v." + version)].join(" "),
+                    filter.test_state
+                  ] )
+
+                  if (filter.test_state == 'success')
+
+                    row do
+                      column runs.to_s
+                      column @server
+                      column @test
+                      column @platform
+                      column [@browser.capitalize, ("v. " + version)].join(" ")
+                      column filter.test_state
+                    end
+
+                  else
+
+                    row(:bold => 'true') do
+                      column runs.to_s
+                      column @server
+                      column @test
+                      column @platform
+                      column [@browser.capitalize, ("v. " + version)].join(" ")
+                      column filter.test_state
+                    end
+
+                  end
 
                 end
+
 
                 runs = runs + 1
 
@@ -478,11 +535,22 @@ require "command_line_reporter"
 
     }
 
-    s = Solver.new
+      end
 
-    filename = "./reports/#{@uid}-#{ Brain.stamp }"
-    File.write( filename, s.solve )
-    Brain.filelist.push(filename)
+    $stdout.close
+    $stdout = STDOUT
+
+    # Tell them that the report was written
+    puts "Report written to #{ reportname }"
+
+    # Slurp in the report ( FIXME )
+    reporttext = File.open(reportname, 'r') { |f| f.read }
+
+    # Print out the report after ( FIXME )
+    puts reporttext
+
+    # Add to the internal list of generated files
+    Brain.filelist.push( reportname )
 
     end
 
