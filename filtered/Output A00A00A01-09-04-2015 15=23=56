@@ -1,0 +1,19 @@
+Feature: Utility Scenarios
+ >>>> FAILED AT <<<<     And I open the experiment                                          # features/support/step_definitions/experiment_steps/open_experiment.rb:1
+      expected: /^Cytobank - .*$/
+           got: "Cytobank error" (using =~)
+      Diff:
+      @@ -1,2 +1,2 @@
+      -/^Cytobank - .*$/
+      +"Cytobank error"
+       (RSpec::Expectations::ExpectationNotMetError)
+      ./lib/cytobank.rb:163:in `goto_experiment'
+      ./features/support/step_definitions/experiment_steps/open_experiment.rb:2:in `/^I open the experiment$/'
+      features/cytobank/utility.feature:30:in `And I open the experiment'
+
+Failing Scenarios:
+cucumber features/cytobank/utility.feature:19 # Scenario: Run Very Basic Cytoweb Performance Test
+
+1 scenario (1 failed)
+16 steps (1 failed, 8 skipped, 7 passed)
+2m44.649s
