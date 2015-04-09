@@ -463,7 +463,6 @@ require "command_line_reporter"
 
                 if (Brain.debug == 0)
 
-                  puts "We got here, and we're about to run the string!"
                   result = %x( #{ execstring } 2>&1 )
 
                 elsif ((Brain.debug == 1) && (Brain.cache.length > 0 ))
