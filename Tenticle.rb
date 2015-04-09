@@ -454,12 +454,16 @@ require "command_line_reporter"
 
                 # Pack up the vars into the executable string
                 execstring = '/usr/local/bin/gless ' +
-                             test + " " + server + " GE_BROWSER=" +
-                             browser + ' GE_PLATFORM="' + platform + '"' + " GE_BROWSER_VERSION=" + version
+                             test + " " +
+                             server + " GE_BROWSER=" +
+                             browser + ' GE_PLATFORM="' +
+                             platform + '"' + " GE_BROWSER_VERSION=" +
+                             version
                 Brain.info(execstring)
 
                 if (Brain.debug == 0)
 
+                  puts "We got here, and we're about to run the string!"
                   result = %x( #{ execstring } 2>&1 )
 
                 elsif ((Brain.debug == 1) && (Brain.cache.length > 0 ))
@@ -474,7 +478,6 @@ require "command_line_reporter"
                 if (Brain.debug == 0)
                   filename = "./raw/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, result) 		             # Drop the raw output into a file
-                  Brain.filelist.push(filename)
                 end
 
                 unless (result.nil?)
@@ -482,44 +485,43 @@ require "command_line_reporter"
                   result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
                   filtered = filter.run(result)
+                  @failed = filter.test_state
                   filename = "./filtered/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, filtered)          # Drop the filtered into a file
-                  Brain.filelist.push(filename)
                   Brain.stats.push( [
                     runs.to_s,
                     @server,
                     @test,
                     @platform,
                     [@browser.capitalize, ("v." + version)].join(" "),
-                    filter.test_state
+                    @failed
                   ] )
-
-                  if (filter.test_state == 'success')
-
-                    row do
-                      column runs.to_s
-                      column @server
-                      column @test
-                      column @platform
-                      column [@browser.capitalize, ("v. " + version)].join(" ")
-                      column filter.test_state
-                    end
-
-                  else
-
-                    row(:bold => 'true') do
-                      column runs.to_s
-                      column @server
-                      column @test
-                      column @platform
-                      column [@browser.capitalize, ("v. " + version)].join(" ")
-                      column filter.test_state
-                    end
-
-                  end
 
                 end
 
+                if (@failed == 'success')
+
+                  row do
+                    column runs.to_s
+                    column @server
+                    column @test
+                    column @platform
+                    column [@browser.capitalize, ("v. " + version)].join(" ")
+                    column @failed
+                  end
+
+                else
+
+                  row(:bold => 'true') do
+                    column runs.to_s
+                    column @server
+                    column @test
+                    column @platform
+                    column [@browser.capitalize, ("v. " + version)].join(" ")
+                    column @failed
+                  end
+
+                end
 
                 runs = runs + 1
 
@@ -548,9 +550,6 @@ require "command_line_reporter"
 
     # Print out the report after ( FIXME )
     puts reporttext
-
-    # Add to the internal list of generated files
-    Brain.filelist.push( reportname )
 
     end
 
