@@ -282,6 +282,19 @@ require "command_line_reporter"
           processed.push(line)
           Brain.log.info("Catching a line because of lack of indentation.")
 
+        elsif (line.match(/^\d/) && line.grep(/steps/))
+
+          if (line.match(/(\d{1,3}) steps \((\1) passed/))
+
+            Brain.test_state = "success"
+
+          else
+
+            Brain.test_state = "failure"
+
+          end
+
+
         end
 
         previous = line				# Next line. Store the last one.
