@@ -19,12 +19,15 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug, :cache, :uid, :filelist, :axes
+      attr_accessor :stats, :log, :debug, :cache,
+                    :uid, :filelist, :axes, :test_state
+
 
     end
 
-    # stats is the end result from Cuisinart.
     self.stats = []
+
+    self.test_state = "N/A"
 
     # filelist is a list of files from a previous run.
     self.filelist = []
@@ -37,7 +40,7 @@ require "command_line_reporter"
     log.formatter = proc{ |severity, datetime, progname, msg| puts msg }			# Fish out the error message only
 
     # This uid is set to a new UID for a fresh run
-    self.uid = "A00A00B38"
+    self.uid = "A00A00A01"
 
     def self.stamp
 
@@ -207,10 +210,6 @@ require "command_line_reporter"
 
     @lines = ''
 
-    attr_accessor :test_state
-
-    @test_state = ""
-
       def initialize()
 
         self.formatter = 'progress'
@@ -226,7 +225,7 @@ require "command_line_reporter"
         previous = ''
         error = false
 
-        @test_state = "success"
+        Brain.test_state = "N/A "
 
         result.each_line { |line|
 
@@ -267,7 +266,7 @@ require "command_line_reporter"
          previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
 
           error = true
-          @test_state = "failure"
+          Brain.test_state = "failure"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
@@ -484,7 +483,6 @@ require "command_line_reporter"
                   result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
                   filtered = filter.run(result)
-                  @failed = filter.test_state
                   filename = "./filtered/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, filtered)          # Drop the filtered into a file
                   Brain.stats.push( [
@@ -493,7 +491,7 @@ require "command_line_reporter"
                     @test,
                     @platform,
                     [@browser.capitalize, ("v." + version)].join(" "),
-                    @failed
+                    Brain.test_state
                   ] )
 
                 end
@@ -506,7 +504,7 @@ require "command_line_reporter"
                     column @test
                     column @platform
                     column [@browser.capitalize, ("v. " + version)].join(" ")
-                    column @failed
+                    column Brain.test_state
                   end
 
                 else
@@ -517,7 +515,7 @@ require "command_line_reporter"
                     column @test
                     column @platform
                     column [@browser.capitalize, ("v. " + version)].join(" ")
-                    column @failed
+                    column Brain.test_state
                   end
 
                 end
