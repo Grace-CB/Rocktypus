@@ -341,7 +341,7 @@ require "command_line_reporter"
 
         @count = 2
         @servers = ["qa02", "qa03"]
-        @tests = ["u937", "very_tiny_perf_test"]
+        @tests = ["very_tiny_perf_test"]
         @browsers = ["firefox"]
         @platforms = ["Windows 8"]
         @versions = ["33"]
@@ -349,6 +349,8 @@ require "command_line_reporter"
         # THIS IS OUR CACHED CONFIG. THERE ARE MANY LIKE IT. THIS IS OURS.
 
         Brain.cache = Dir["./raw/*A00A00B38*"]
+
+        puts "Brain.cache contains #{ Brain.cache.length } elements."
 
         # Next, we manually get a copy of each of the files that have
         # the tag A00A00B30 and queue them up in Brain.cache.
@@ -469,6 +471,8 @@ require "command_line_reporter"
 
                   # Queue it into the cached gless result files.
                   result = File.read(Brain.cache.shift)
+                  puts "Now the Brain.cache has #{ Brain.cache.length } elements."
+
 
                 end
 
