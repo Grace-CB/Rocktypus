@@ -19,9 +19,16 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug, :cache, :uid, :filelist, :axes
+      attr_accessor :stats, :log, :debug, :test_state,
+                    :cache, :uid, :filelist, :axes, :steps
 
     end
+
+    # this is the variable with the step vars from the regex vars
+    self.steps = []
+
+    # by default we set the test state to N/A
+    self.test_state = "N/A"
 
     # stats is the end result from Cuisinart.
     self.stats = []
@@ -207,10 +214,6 @@ require "command_line_reporter"
 
     @lines = ''
 
-    attr_accessor :test_state
-
-    @test_state = ""
-
       def initialize()
 
         self.formatter = 'progress'
@@ -226,7 +229,7 @@ require "command_line_reporter"
         previous = ''
         error = false
 
-        @test_state = "success"
+        Brain.test_state = "N/A"
 
         result.each_line { |line|
 
@@ -236,6 +239,22 @@ require "command_line_reporter"
         if (index <= 9)				# Ignore the first nine lines.
 
           next
+
+        elsif (line.match(/\d{1,3} scenario \(\d{1,3}/))
+
+          if (line.match('failed'))
+
+            Brain.test_state = "failure"
+
+          elsif (line.match('passed'))
+
+            Brain.test_state = "success"
+
+          else
+
+            Brain.test_state = "N/A"
+
+          end
 
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
 
@@ -256,7 +275,6 @@ require "command_line_reporter"
          line.match(/^\W{4}\w/) and
          previous.match(/^\W{6}\w/) )  		# If we're at the start of an error, start recording and catch the line before.
 
-          error = false
           processed.push(previous)
           processed.push(line)
           Brain.log.info("Caught an ending line and previous.")
@@ -267,7 +285,6 @@ require "command_line_reporter"
          previous.match(/^\W{4}\w/) ) 		# If we're at the end of an error, stop recording.
 
           error = true
-          @test_state = "failure"
           processed.push( " >>>> FAILED AT <<<< " )
           processed.push(previous)
           processed.push(line)
@@ -349,8 +366,6 @@ require "command_line_reporter"
         # THIS IS OUR CACHED CONFIG. THERE ARE MANY LIKE IT. THIS IS OURS.
 
         Brain.cache = Dir["./raw/*A00A00B38*"]
-
-        puts "Brain.cache contains #{ Brain.cache.length } elements."
 
         # Next, we manually get a copy of each of the files that have
         # the tag A00A00B30 and queue them up in Brain.cache.
@@ -471,8 +486,6 @@ require "command_line_reporter"
 
                   # Queue it into the cached gless result files.
                   result = File.read(Brain.cache.shift)
-                  puts "Now the Brain.cache has #{ Brain.cache.length } elements."
-
 
                 end
 
@@ -488,7 +501,7 @@ require "command_line_reporter"
                   result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
                   filtered = filter.run(result)
-                  @failed = filter.test_state
+                  @failed = Brain.test_state
                   filename = "./filtered/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, filtered)          # Drop the filtered into a file
                   Brain.stats.push( [
@@ -505,6 +518,17 @@ require "command_line_reporter"
                 if (@failed == 'success')
 
                   row do
+                    column runs.to_s
+                    column @server
+                    column @test
+                    column @platform
+                    column [@browser.capitalize, ("v. " + version)].join(" ")
+                    column @failed
+                  end
+
+                elsif(@failed == 'failure')
+
+                  row(:bold => 'true') do
                     column runs.to_s
                     column @server
                     column @test
