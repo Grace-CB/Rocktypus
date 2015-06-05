@@ -19,15 +19,19 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug, :cache,
-                    :uid, :filelist, :axes, :test_state
-
+      attr_accessor :stats, :log, :debug, :test_state,
+                    :cache, :uid, :filelist, :axes, :steps
 
     end
 
-    self.stats = []
+    # this is the variable with the step vars from the regex vars
+    self.steps = []
 
+    # by default we set the test state to N/A
     self.test_state = "N/A"
+
+    # stats is the end result from Cuisinart.
+    self.stats = []
 
     # filelist is a list of files from a previous run.
     self.filelist = []
@@ -225,7 +229,7 @@ require "command_line_reporter"
         previous = ''
         error = false
 
-        Brain.test_state = "N/A "
+        Brain.test_state = "N/A"
 
         result.each_line { |line|
 
@@ -235,6 +239,22 @@ require "command_line_reporter"
         if (index <= 9)				# Ignore the first nine lines.
 
           next
+
+        elsif (line.match(/\d{1,3} scenario \(\d{1,3}/))
+
+          if (line.match('failed'))
+
+            Brain.test_state = "failure"
+
+          elsif (line.match('passed'))
+
+            Brain.test_state = "success"
+
+          else
+
+            Brain.test_state = "N/A"
+
+          end
 
         elsif (line.match(/^\W{4}\w/))          # Ignore most lines with 4 whitespaces in front.
 
@@ -353,7 +373,7 @@ require "command_line_reporter"
 
         @count = 2
         @servers = ["qa02", "qa03"]
-        @tests = ["u937", "very_tiny_perf_test"]
+        @tests = ["very_tiny_perf_test"]
         @browsers = ["firefox"]
         @platforms = ["Windows 8"]
         @versions = ["33"]
@@ -496,6 +516,7 @@ require "command_line_reporter"
                   result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
                   filtered = filter.run(result)
+                  @failed = Brain.test_state
                   filename = "./filtered/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, filtered)          # Drop the filtered into a file
                   Brain.stats.push( [
@@ -504,7 +525,7 @@ require "command_line_reporter"
                     @test,
                     @platform,
                     [@browser.capitalize, ("v." + version)].join(" "),
-                    Brain.test_state
+                    @failed
                   ] )
 
                 end
@@ -517,7 +538,18 @@ require "command_line_reporter"
                     column @test
                     column @platform
                     column [@browser.capitalize, ("v. " + version)].join(" ")
-                    column Brain.test_state
+                    column @failed
+                  end
+
+                elsif(@failed == 'failure')
+
+                  row(:bold => 'true') do
+                    column runs.to_s
+                    column @server
+                    column @test
+                    column @platform
+                    column [@browser.capitalize, ("v. " + version)].join(" ")
+                    column @failed
                   end
 
                 else
@@ -528,7 +560,7 @@ require "command_line_reporter"
                     column @test
                     column @platform
                     column [@browser.capitalize, ("v. " + version)].join(" ")
-                    column Brain.test_state
+                    column @failed
                   end
 
                 end
