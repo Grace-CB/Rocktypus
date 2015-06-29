@@ -371,8 +371,8 @@ require "command_line_reporter"
         # 4. First release! Request for feedback.
         # 5. TBD (or "The Future")
 
-        @count = 2
-        @servers = ["qa02", "qa03"]
+        @count = 3
+        @servers = ["qa02"]
         @tests = ["very_tiny_perf_test"]
         @browsers = ["firefox"]
         @platforms = ["Windows 8"]
@@ -380,7 +380,7 @@ require "command_line_reporter"
 
         # THIS IS OUR CACHED CONFIG. THERE ARE MANY LIKE IT. THIS IS OURS.
 
-        Brain.cache = Dir["./raw/*A00A00B38*"]
+        Brain.cache = Dir["./raw/*A00A00A14*"]
 
         # Next, we manually get a copy of each of the files that have
         # the tag A00A00B30 and queue them up in Brain.cache.
