@@ -1,5 +1,6 @@
 module Tenticle
 
+require 'pty'
 require "highline/import"
 require "trollop"
 require "logger"
@@ -19,10 +20,16 @@ require "command_line_reporter"
 
     class << self
 
-      attr_accessor :stats, :log, :debug, :test_state,
-                    :cache, :uid, :filelist, :axes, :steps
+      attr_accessor :stats, :log, :debug, :test_state, :throbber,
+                    :cache, :uid, :filelist, :axes, :steps, :result
 
     end
+
+    # Result variable
+    self.result = ""
+
+    # Throbber symbols
+    self.throbber = [ "\\", "|", "/", "-" ]
 
     # this is the variable with the step vars from the regex vars
     self.steps = []
@@ -493,29 +500,50 @@ require "command_line_reporter"
                              version
                 Brain.info(execstring)
 
-                if (Brain.debug == 0)
+		needler = Thread.new{
 
-                  result = %x( #{ execstring } 2>&1 )
+                  if (Brain.debug == 0)
 
-                elsif ((Brain.debug == 1) && (Brain.cache.length > 0 ))
+                    Brain.result = %x( #{ execstring } 2>&1 )
 
-                  # Queue it into the cached gless result files.
-                  result = File.read(Brain.cache.shift)
+                  elsif ((Brain.debug == 1) && (Brain.cache.length > 0 ))
+
+                    # Queue it into the cached gless result files.
+                    Brain.result = File.read(Brain.cache.shift)
+
+                  end
+
+		  STDERR.print "\r"
+	  	  STDERR.print "Running iteration #{runs} of #{test} on #{server}: [---] Done. \n" 
+
+		}
+
+                throbber_counter = 0
+
+		while needler.status
+
+                  throbber_counter = throbber_counter + 1
+
+                  STDERR.print "\r"
+                  STDERR.print "Running iteration #{runs} of #{test} on #{server}: [ #{ Brain.throbber[ throbber_counter % 4 ] } ]"
+
+                  # sleep 0.02
 
                 end
+		  
 
                 Brain.log.info( "Finished the executions." )
 
                 if (Brain.debug == 0)
                   filename = "./raw/Output #{@uid}-#{ Brain.stamp }"
-                  File.write( filename, result) 		             # Drop the raw output into a file
+                  File.write( filename, Brain.result) 		             # Drop the raw output into a file
                 end
 
-                unless (result.nil?)
+                unless (Brain.result.nil?)
 
-                  result = result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
+                  Brain.result = Brain.result.gsub(/\e\[\d{1,2}m/, '')                               # Strip formatting
                   filter = Cuisinart.new()
-                  filtered = filter.run(result)
+                  filtered = filter.run(Brain.result)
                   @failed = Brain.test_state
                   filename = "./filtered/Output #{@uid}-#{ Brain.stamp }"
                   File.write( filename, filtered)          # Drop the filtered into a file
